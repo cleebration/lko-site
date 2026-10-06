@@ -1,0 +1,60 @@
+{
+  "nav": {
+    "concerts": "Konzerte",
+    "orchestra": "Orchester",
+    "news": "Neuigkeiten",
+    "newsletter": "Newsletter",
+    "join": "Mitspielen",
+    "imprint": "Impressum",
+    "privacy": "Datenschutz"
+  },
+  "a11y": {
+    "skip": "Zum Inhalt springen",
+    "mainnav": "Hauptnavigation",
+    "home": "Startseite",
+    "language": "Sprache wählen"
+  },
+  "home": {
+    "next": "Unser nächster Auftritt",
+    "who": "Wer wir sind",
+    "cardConcerts": "Unsere Konzerte",
+    "cardNewsletter": "Anmeldung zum Newsletter",
+    "cardOrchestra": "Unser Orchester",
+    "cardJoin": "Anfrage zum Mitspielen",
+    "news": "Neuigkeiten"
+  },
+  "events": {
+    "upcoming": "Kommende Konzerte",
+    "past": "Vergangene Konzerte",
+    "backAll": "← Alle Konzerte"
+  },
+  "news": {
+    "title": "Neuigkeiten"
+  },
+  "orchestra": {
+    "title": "Unser Orchester",
+    "ensemble": "Das Ensemble",
+    "vl1": "1. Violine",
+    "vl2": "2. Violine",
+    "va": "Viola",
+    "vc": "Violoncello",
+    "cb": "Kontrabass",
+    "concertmaster": "(Konzertmeister)",
+    "concertmasterDep": "(Konzertmeister Stv.)",
+    "chair": "(Obmann)",
+    "chairDep": "(Obmann-Stellvertreterin)",
+    "treasurer": "(Kassier)",
+    "secretary": "(Schriftführer)"
+  },
+  "newsletter": {
+    "title": "Anmeldung zum Newsletter"
+  },
+  "join": {
+    "title": "Anfrage zum Mitspielen"
+  },
+  "legal": {
+    "imprint": "Impressum",
+    "privacy": "Datenschutz",
+    "binding": "Maßgeblich ist die deutsche Fassung. Die englische Übersetzung dient nur der Information."
+  }
+}

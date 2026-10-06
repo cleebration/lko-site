@@ -1,0 +1,19 @@
+<!--meta
+{
+  "title": "Konzerte | Linzer Kammerorchester",
+  "description": "Kommende und vergangene Konzerte des Linzer Kammerorchesters.",
+  "nav": "konzerte",
+  "out": "konzerte.html",
+  "scripts": "<script type=\"module\" src=\"/assets/event-widget.i18n.js\"></script>"
+}
+-->
+
+<h1 class="page-title" data-i18n="events.upcoming">Kommende Konzerte</h1>
+<div class="wrap">
+  <event-list feed="{{FEED_EVENTS}}" detail-url="/event" show="upcoming"></event-list>
+</div>
+
+<h2 class="section-title" data-i18n="events.past">Vergangene Konzerte</h2>
+<div class="wrap">
+  <event-list feed="{{FEED_EVENTS}}" detail-url="/event" show="past"></event-list>
+</div>

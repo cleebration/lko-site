@@ -1,0 +1,60 @@
+{
+  "nav": {
+    "concerts": "Concerts",
+    "orchestra": "Orchestra",
+    "news": "News",
+    "newsletter": "Newsletter",
+    "join": "Join us",
+    "imprint": "Imprint",
+    "privacy": "Privacy"
+  },
+  "a11y": {
+    "skip": "Skip to content",
+    "mainnav": "Main navigation",
+    "home": "Home",
+    "language": "Choose language"
+  },
+  "home": {
+    "next": "Our next performance",
+    "who": "Who we are",
+    "cardConcerts": "Our concerts",
+    "cardNewsletter": "Sign up for the newsletter",
+    "cardOrchestra": "Our orchestra",
+    "cardJoin": "Request to join",
+    "news": "News"
+  },
+  "events": {
+    "upcoming": "Upcoming concerts",
+    "past": "Past concerts",
+    "backAll": "← All concerts"
+  },
+  "news": {
+    "title": "News"
+  },
+  "orchestra": {
+    "title": "Our orchestra",
+    "ensemble": "The ensemble",
+    "vl1": "1st violin",
+    "vl2": "2nd violin",
+    "va": "Viola",
+    "vc": "Cello",
+    "cb": "Double bass",
+    "concertmaster": "(concertmaster)",
+    "concertmasterDep": "(deputy concertmaster)",
+    "chair": "(chairman)",
+    "chairDep": "(deputy chair)",
+    "treasurer": "(treasurer)",
+    "secretary": "(secretary)"
+  },
+  "newsletter": {
+    "title": "Sign up for the newsletter"
+  },
+  "join": {
+    "title": "Request to join"
+  },
+  "legal": {
+    "imprint": "Imprint",
+    "privacy": "Privacy",
+    "binding": "The German version is the binding one. This English translation is for information only."
+  }
+}

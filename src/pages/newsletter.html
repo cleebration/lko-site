@@ -1,0 +1,23 @@
+<!--meta
+{
+  "title": "Newsletter | Linzer Kammerorchester",
+  "description": "Anmeldung zum Newsletter des Linzer Kammerorchesters – Konzerttermine per E-Mail.",
+  "nav": "newsletter",
+  "out": "newsletter.html",
+  "scripts": "<script type=\"module\" src=\"/assets/newsletter-widget.js\"></script>"
+}
+-->
+
+<h1 class="page-title" data-i18n="newsletter.title">Anmeldung zum Newsletter</h1>
+
+<div class="wrap">
+  <!-- Wix-Formular (E-Mail, Vorname, Nachname) ersetzt durch das Newsletter-Kit.
+       Es schickt an /api/subscribe (worker/index.js → functions/api/subscribe.js),
+       der Schlüssel des EmailOctopus-Kontos liegt nur als Secret beim Worker. -->
+  <span data-lang="de"><newsletter-signup endpoint="/api/subscribe" site="kammerorchester"
+      heading="Newsletter" text="Konzerttermine und Neuigkeiten des Linzer Kammerorchesters per E-Mail."
+      privacy-url="/datenschutz"></newsletter-signup></span>
+  <span data-lang="en"><newsletter-signup endpoint="/api/subscribe" site="kammerorchester"
+      heading="Newsletter" text="Concert dates and news from the Linz Chamber Orchestra by email."
+      privacy-url="/datenschutz"></newsletter-signup></span>
+</div>

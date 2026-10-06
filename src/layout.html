@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{{TITLE}}</title>
+<meta name="description" content="{{DESCRIPTION}}" />
+<link rel="canonical" href="{{SITE_URL}}{{CANONICAL}}" />
+
+<meta property="og:site_name" content="Linzer Kammerorchester" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="{{TITLE}}" />
+<meta property="og:description" content="{{DESCRIPTION}}" />
+<meta property="og:url" content="{{SITE_URL}}{{CANONICAL}}" />
+<meta property="og:image" content="{{SITE_URL}}{{IMG_OG}}" />
+<meta name="twitter:card" content="summary_large_image" />
+
+<link rel="icon" href="/assets/img/lko-logo-quadrat.jpg" type="image/jpeg" />
+<link rel="apple-touch-icon" href="/assets/img/lko-logo-quadrat.jpg" />
+<meta name="theme-color" content="#1F2E4D" />
+
+{{FONTS}}
+<link rel="stylesheet" href="/assets/site.css" />
+{{HEAD}}
+</head>
+<body>
+
+{{HEADER}}
+
+<main id="main">
+{{BODY}}
+</main>
+
+{{FOOTER}}
+
+<script type="module">
+  import "/assets/site-i18n.js";
+  await SiteI18n.init({
+    locales: {{LOCALES}},
+    defaultLocale: "{{DEFAULT_LOCALE}}",
+    autoDetect: {{AUTO_DETECT}},
+    dictPath: "/assets/i18n"
+  });
+</script>
+<script type="module" src="/assets/site.js"></script>
+<script type="module" src="/assets/brand/cleebration-credit.js"></script>
+{{SCRIPTS}}
+
+</body>
+</html>

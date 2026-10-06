@@ -1,0 +1,35 @@
+{
+  // Cloudflare Worker mit statischen Assets — Aufbau wie babowalls.com.
+  "name": "lko-site",
+  "compatibility_date": "2026-10-06",
+  "main": "worker/index.js",
+
+  // workers.dev-Adresse: Vorschau, solange die Domain noch auf Wix zeigt.
+  "workers_dev": true,
+  "preview_urls": true,
+
+  // Die eigenen Namen — ERST in Schritt 2 einkommentieren (nach dem 05.11.2026).
+  // Cloudflare legt die DNS-Einträge beim Deploy selbst an; die Wix-Einträge
+  // (A @ ×3, CNAME www) müssen vorher weg. m. war auf Wix nicht eingetragen.
+  // "routes": [
+  //   { "pattern": "linzer-kammerorchester.at",     "custom_domain": true },
+  //   { "pattern": "www.linzer-kammerorchester.at", "custom_domain": true }
+  // ],
+
+  // Newsletter-Secrets NICHT hier, sondern einmalig per
+  //   npx wrangler secret put EMAILOCTOPUS_API_KEY
+  //   npx wrangler secret put EMAILOCTOPUS_LIST_ID
+  "vars": {
+    "EMAILOCTOPUS_TAGS": "kammerorchester",
+    "EMAILOCTOPUS_API_VERSION": "v2"
+  },
+
+  "assets": {
+    "directory": "public",
+    "binding": "ASSETS",
+    "html_handling": "auto-trailing-slash",
+    "run_worker_first": true
+  },
+
+  "observability": { "enabled": true }
+}

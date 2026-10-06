@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Drei Ziegelreihen, versetzt — die Wortmarke „Walls" als Zeichen.
+       Als Flächen gezeichnet, nicht als Schrift: bei 16 px lesbar und
+       unabhängig davon, welche Schriften das Gerät hat. -->
+  <rect width="64" height="64" rx="12" fill="#8C3B2A"/>
+  <g fill="#faf8f5">
+    <rect x="8"  y="12" width="22" height="11" rx="1.5"/><rect x="34" y="12" width="22" height="11" rx="1.5"/>
+    <rect x="8"  y="27" width="10" height="11" rx="1.5"/><rect x="22" y="27" width="20" height="11" rx="1.5"/><rect x="46" y="27" width="10" height="11" rx="1.5"/>
+    <rect x="8"  y="42" width="22" height="11" rx="1.5"/><rect x="34" y="42" width="22" height="11" rx="1.5"/>
+  </g>
+</svg>

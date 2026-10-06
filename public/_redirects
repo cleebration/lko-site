@@ -1,0 +1,36 @@
+# ===========================================================================
+#  Weiterleitungen linzer-kammerorchester.at — alte Wix-Adressen → neue Seiten
+#  (Seitenliste aus der Wix-Sitemap, 06.10.2026)
+#
+#  EINE Quelle, ZWEI Leser (wie babowalls.com):
+#   1. build.mjs übersetzt die 3xx-Zeilen nach worker/redirects.generated.js
+#   2. Cloudflares Asset-Schicht liest diese Datei selbst
+#   - KEINE 200-Zeilen — unter Workers Endlosschleife
+#   - Sonderfälle ÜBER den Platzhaltern; die erste passende Regel gewinnt
+#   - Umlaute so, wie der Browser sie schickt: prozent-kodiert
+# ===========================================================================
+
+# --- Seiten (Wix vergab „blank…"-Namen) ---------------------------------------
+/blank        /orchester   301
+/blank-1      /newsletter  301
+/blank-2      /impressum   301
+/blank-1-1    /mitspielen  301
+/event-list   /konzerte    301
+
+# --- Konzerte: Wix-Slug → Eintrag im Events-Hub -------------------------------
+/event-details/fruhlingskonzert-la-prima-vera                /event?event=fruhlingskonzert-la-prima-vera 301
+/event-details/fruhlingskonzert                              /event?event=fruhlingskonzert-2025 301
+/event-details/eroffnung-der-ausstellung-sehnsucht-frieden   /event?event=eroffnung-der-ausstellung-sehnsucht-frieden 301
+/event-details/herbstkonzert                                 /event?event=herbstkonzert-2025 301
+/event-details/rettet-das-kind                               /event?event=rettet-das-kind 301
+/event-details/messe-maria-empfangnis-musikalischer-rahmen   /event?event=messe-maria-empfangnis 301
+/event-details/fruhlingskonzert-1                            /event?event=fruhlingskonzert-des-linzer-kammerorchesters 301
+/event-details/herbstkonzert-3                               /event?event=herbstkonzert-2026 301
+/event-details/*                                             /konzerte 301
+
+# --- Neuigkeiten (Wix-Blog) ---------------------------------------------------
+/post/musikalischer-rahmen-bei-der-messe-zu-mari%C3%A4-empf%C3%A4ngnis /post?post=musikalischer-rahmen-bei-der-messe-zu-mariae-empfaengnis 301
+/post/musikalischer-rahmen-im-nordico /post?post=musikalischer-rahmen-im-nordico 301
+/post/der-fr%C3%BChling-kehrte-ein /post?post=der-fruehling-kehrte-ein 301
+/post/* /blog 301
+/blog/* /blog 301

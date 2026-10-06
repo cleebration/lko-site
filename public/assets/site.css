@@ -1,0 +1,395 @@
+/* =========================================================================
+   linzer-kammerorchester.at — Design-Tokens & Layout (abgeleitet von cleebration.com)
+   Eine einzige Quelle für Farben, Schriften, Abstände.
+   Die Kit-Module (Events, Blog, Galerie, Newsletter, Sprachumschalter)
+   werden hier auf dieselben Tokens gemappt — deshalb sieht alles gleich aus.
+   ========================================================================= */
+
+:root {
+  /* ---- Marke: „Stein & Ziegel" -----------------------------------------
+     babowalls.com hat eine eigene Identität (Regel „jede Marke ihre eigene",
+     CLEEBRATION-STACK-KONTEXT.md). Die Variablennamen --cl-* bleiben von
+     cleebration.com übernommen, damit das Mapping auf die Kit-Module unten
+     unverändert gilt; nur die Werte sind andere:
+
+       --cl-navy  → Ziegelrot, Akzent und aktive Navigation
+       --cl-gold  → Sandstein, Linie unter dem Kopf
+     Kontrast Ziegelrot auf Kalkstein 7,1 : 1, Meta-Grau 4,7 : 1 (beides AA),
+     Rubriken-Grau 3,3 : 1 — nur für große Überschriften (AA groß ≥ 3 : 1). */
+  /* Marke Linzer Kammerorchester: „tiefes Blau, formell"
+     (CLEEBRATION-STACK-KONTEXT.md, Abschnitt 4). Das Logo bleibt in seinem
+     Weinrot (#861C33) — es steht im Kopf, das Blau trägt den Rest. */
+  --cl-navy:        #1F2E4D;   /* Tiefblau, Akzent und aktive Navigation */
+  --cl-navy-pale:   #e9edf4;
+  --cl-gold:        #B9C3D4;   /* Silbergrau, Linie unter dem Kopf */
+  --cl-gold-dark:   #5D6B84;
+  --cl-red:         #861C33;   /* Logo-Weinrot */
+
+  --cl-ink:         #1d2230;
+  --cl-muted:       #5f6675;
+  --cl-heading:     #7a8296;
+  --cl-surface:     #ffffff;
+  --cl-bg:          #f7f8fa;
+  --cl-border:      #e6e0d8;
+
+/* ---- Schrift ----------------------------------------------------------
+     EB Garamond für Überschriften, Work Sans für alles andere.
+
+     Davor standen hier Instrument Serif und Instrument Sans. Die laufen
+     beide sehr eng — auf den großen grauen Rubriken und den Kartentiteln
+     klebten die Buchstaben aneinander. EB Garamond hat deutlich mehr Luft
+     dazwischen, Work Sans offenere Punzen. Gewechselt am 22.09.2026 nach
+     einem Direktvergleich von vier Paarungen.
+
+     Zwei Eigenheiten von EB Garamond, die beim Setzen zählen:
+
+     1. Sie läuft optisch KLEIN. Dieselbe Pixelgröße wirkt kleiner als bei
+        Instrument Serif. Die Überschriften sind deshalb unten um etwa ein
+        Zehntel größer gesetzt — das ist keine Willkür, sondern gleicht die
+        Schrift aus.
+
+     2. Sie hat echte Schnitte von 400 bis 800. Anders als Instrument Serif,
+        die es nur in 400 gab, darf hier also wieder 500 oder 600 stehen,
+        wo eine Überschrift Gewicht braucht. Künstliches Fetten durch den
+        Browser ist nicht mehr nötig. */
+  --cl-font-display: "EB Garamond", Georgia, "Times New Roman", serif;
+  --cl-font-body:    "Work Sans", -apple-system, "Segoe UI", sans-serif;
+  --cl-font-thin:    var(--cl-font-body);
+
+  /* ---- Maße ------------------------------------------------------------- */
+  --cl-maxwidth: 1120px;
+  --cl-gutter:   20px;
+  --cl-radius:   4px;
+
+}
+
+/* ===========================================================================
+   Mapping auf die Kit-Module.
+   Wichtig: die Module setzen ihre Standardwerte im Shadow DOM auf :host.
+   Eine Deklaration auf :host schlägt den geerbten Wert von :root — die
+   Marken-Tokens müssen deshalb auf dem ELEMENT selbst stehen, nicht auf :root.
+   Genau dafür ist der folgende Block da.
+   =========================================================================== */
+
+event-list, event-detail,
+blog-list, blog-post, blog-credit,
+gallery-grid, gallery-detail,
+newsletter-signup,
+lang-switcher {
+
+  /* Events-Kit */
+  --evt-font-display: var(--cl-font-display);
+  --evt-font-body:    var(--cl-font-body);
+  --evt-bg:           transparent;
+  --evt-surface:      var(--cl-surface);
+  --evt-text:         var(--cl-ink);
+  --evt-muted:        var(--cl-muted);
+  --evt-accent:       var(--cl-navy);
+  --evt-accent-contrast: #ffffff;
+  --evt-border:       var(--cl-border);
+  --evt-radius:       var(--cl-radius);
+  --evt-gap:          1.75rem;
+  --evt-maxwidth:     var(--cl-maxwidth);
+
+  /* Blog-Kit */
+  --blog-font-display: var(--cl-font-display);
+  --blog-font-body:    var(--cl-font-body);
+  --blog-bg:           transparent;
+  --blog-surface:      var(--cl-surface);
+  --blog-text:         var(--cl-ink);
+  --blog-muted:        var(--cl-muted);
+  --blog-accent:       var(--cl-navy);
+  --blog-accent-contrast: #ffffff;
+  --blog-border:       var(--cl-border);
+  --blog-radius:       var(--cl-radius);
+  --blog-gap:          1.75rem;
+  --blog-maxwidth:     var(--cl-maxwidth);
+  --blog-readwidth:    680px;
+
+  /* Galerie-Kit (trägt die Engagements) */
+  --gal-font-display: var(--cl-font-display);
+  --gal-font-body:    var(--cl-font-body);
+  --gal-bg:           transparent;
+  --gal-surface:      var(--cl-surface);
+  --gal-text:         var(--cl-ink);
+  --gal-muted:        var(--cl-muted);
+  --gal-accent:       var(--cl-navy);
+  --gal-accent-contrast: #ffffff;
+  --gal-border:       var(--cl-border);
+  --gal-radius:       var(--cl-radius);
+  --gal-gap:          1.25rem;
+  --gal-tile:         260px;
+  --gal-aspect:       3 / 2;
+  --gal-maxwidth:     var(--cl-maxwidth);
+  --gal-overlay:      rgba(12, 11, 10, .92);
+
+  /* Newsletter-Kit */
+  --nl-font-display: var(--cl-font-display);
+  --nl-font-body:    var(--cl-font-body);
+  --nl-bg:           transparent;
+  --nl-surface:      var(--cl-surface);
+  --nl-text:         var(--cl-ink);
+  --nl-muted:        var(--cl-muted);
+  --nl-accent:       var(--cl-navy);
+  --nl-accent-contrast: #ffffff;
+  --nl-border:       var(--cl-border);
+  --nl-radius:       var(--cl-radius);
+  --nl-gap:          .75rem;
+  --nl-maxwidth:     520px;
+
+  /* Sprachumschalter (i18n-Kit) */
+  --li18n-text:    var(--cl-ink);
+  --li18n-muted:   var(--cl-muted);
+  --li18n-accent:  var(--cl-navy);
+  --li18n-accent-contrast: #ffffff;
+  --li18n-border:  var(--cl-border);
+  --li18n-radius:  var(--cl-radius);
+  --li18n-gap:     .35rem;
+  --li18n-font:    var(--cl-font-body);
+}
+
+/* ---- Grundlagen --------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--cl-bg);
+  color: var(--cl-ink);
+  font-family: var(--cl-font-body);
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+a { color: inherit; }
+
+img { max-width: 100%; height: auto; }
+
+.wrap {
+  max-width: var(--cl-maxwidth);
+  margin-inline: auto;
+  padding-inline: var(--cl-gutter);
+}
+
+.skip-link {
+  position: absolute; left: -9999px;
+  background: var(--cl-navy-pale); color: var(--cl-navy);
+  padding: .6rem 1rem; border-radius: var(--cl-radius); z-index: 100;
+}
+.skip-link:focus { left: var(--cl-gutter); top: .5rem; }
+
+/* ---- Kopfbereich -------------------------------------------------------- */
+.site-top {
+  border-bottom: 3px solid var(--cl-gold);
+}
+
+.site-top__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding-block: .5rem;
+}
+
+.mainnav ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .25rem;
+  list-style: none;
+  margin: 0; padding: 0;
+}
+
+.mainnav a {
+  display: block;
+  padding: .55rem 1.1rem;
+  text-decoration: none;
+  color: var(--cl-ink);
+  font-size: .95rem;
+  border: 1px solid transparent;
+  border-radius: var(--cl-radius);
+  transition: background-color .15s ease, color .15s ease;
+}
+.mainnav a:hover { background: #f5f5f5; }
+
+.mainnav a[aria-current="page"] {
+  background: var(--cl-navy-pale);
+  color: var(--cl-navy);
+  border-color: #c2cbe2;
+}
+
+.mainnav a.is-external::after {
+  content: "↗";
+  font-size: .75em;
+  margin-left: .3em;
+  opacity: .6;
+}
+
+/* ---- Wortmarke im Kopf ------------------------------------------------ */
+.wordmark {
+  font-family: var(--cl-font-display);
+  font-size: 1.35rem;
+  letter-spacing: .01em;
+  color: var(--cl-ink);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.wordmark span:nth-child(2) { color: var(--cl-navy); }
+
+/* ---- Startseite ---------------------------------------------------------- */
+.hero { text-align: center; padding-block: 3rem 1rem; }
+.hero__kicker {
+  text-transform: uppercase; letter-spacing: .18em; font-size: .8rem;
+  color: var(--cl-muted); margin: 0 0 .6rem;
+}
+.hero__title {
+  font-family: var(--cl-font-display); font-weight: 500;
+  font-size: clamp(2.6rem, 7vw, 4.8rem); line-height: 1.05;
+  letter-spacing: -0.015em; color: var(--cl-ink); margin: 0 0 1.75rem;
+}
+.hero__text { max-width: 620px; margin-inline: auto; font-size: 1.08rem; }
+.hero__text p { margin: 0 0 .9rem; }
+.hero__text em { color: var(--cl-navy); font-style: italic; }
+
+.more { text-align: right; margin: 1rem 0 0; }
+.more a { color: var(--cl-navy); text-decoration: none; font-weight: 500; }
+.more a:hover { text-decoration: underline; }
+
+/* ---- Über mich ------------------------------------------------------------ */
+.about { text-align: center; }
+.about__portrait { width: 160px; height: 160px; border-radius: 50%; object-fit: cover; }
+.about__name { font-family: var(--cl-font-display); font-size: 1.6rem; margin: .5rem 0 1.5rem; }
+
+/* ---- Seitentitel -------------------------------------------------------- */
+.page-title {
+  font-family: var(--cl-font-display);
+  font-weight: 400;
+  font-size: clamp(2.4rem, 5.9vw, 4.1rem);
+  letter-spacing: -0.015em;
+  line-height: 1.1;
+  color: var(--cl-heading);
+  text-align: center;
+  margin: 2.5rem 0 1.5rem;
+}
+
+.page-intro {
+  max-width: 680px;
+  margin: 0 auto 2.5rem;
+  text-align: center;
+  color: var(--cl-muted);
+}
+
+.section-title {
+  font-family: var(--cl-font-display);
+  font-weight: 400;
+  font-size: clamp(1.8rem, 4.1vw, 2.8rem);
+  letter-spacing: -0.01em;
+  color: var(--cl-heading);
+  text-align: center;
+  margin: 3.5rem 0 1.5rem;
+}
+
+/* ---- Kontaktseite ------------------------------------------------------- */
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1rem;
+  margin-block: 2rem;
+}
+
+.contact-card {
+  display: block;
+  padding: 1.4rem;
+  border: 1px solid var(--cl-border);
+  border-radius: var(--cl-radius);
+  text-decoration: none;
+  background: var(--cl-surface);
+  transition: border-color .15s ease, transform .15s ease;
+}
+.contact-card:hover { border-color: var(--cl-navy); transform: translateY(-2px); }
+.contact-card h3 {
+  font-family: var(--cl-font-display);
+  margin: 0 0 .4rem; font-size: 1.15rem; color: #111;
+}
+.contact-card p { margin: 0; font-size: .92rem; color: var(--cl-muted); }
+
+.prose { max-width: 680px; margin-inline: auto; }
+.prose h2 {
+  font-family: var(--cl-font-display);
+  color: #111; font-size: 1.5rem; margin-top: 2.2rem;
+}
+.prose a { color: var(--cl-navy); }
+
+/* "Stand: …" am Ende der Rechtstexte — leise, aber auffindbar. */
+.prose .meta {
+  margin-top: 2.5rem;
+  font-size: .85rem;
+  color: var(--cl-muted);
+}
+
+/* ---- Fußbereich --------------------------------------------------------- */
+.site-foot {
+  margin-top: 4rem;
+  border-top: 1px solid var(--cl-border);
+  padding-block: 2.5rem 3rem;
+  text-align: center;
+  color: var(--cl-muted);
+  font-size: .9rem;
+}
+
+.site-foot__mail {
+  font-family: var(--cl-font-display);
+  font-size: 1.05rem;
+  color: var(--cl-ink);
+  text-decoration: none;
+}
+.site-foot__mail:hover { text-decoration: underline; }
+
+.social {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: .9rem;
+  margin: 1.25rem 0;
+  padding: 0;
+  list-style: none;
+}
+.social a {
+  display: block;
+  padding: .3rem .8rem;
+  border: 1px solid var(--cl-border);
+  border-radius: 999px;
+  color: var(--cl-muted);
+  text-decoration: none;
+  font-size: .82rem;
+  letter-spacing: .01em;
+  transition: color .15s ease, border-color .15s ease;
+}
+.social a:hover { color: var(--cl-navy); border-color: var(--cl-navy); }
+
+.site-foot__legal a { color: var(--cl-muted); }
+.site-foot__credit { margin: 1.25rem 0; color: var(--cl-ink); }
+
+/* ---- Mobil -------------------------------------------------------------- */
+@media (max-width: 760px) {
+  .wordmark { width: 100%; text-align: center; }
+  .site-top__inner { justify-content: center; }
+  .mainnav ul { justify-content: center; }
+  .mainnav a { padding: .5rem .75rem; font-size: .9rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+
+
+/* ---- linzer-kammerorchester.at ------------------------------------------ */
+.wordmark--logo img { display: block; height: 52px; width: auto; }
+@media (max-width: 640px) { .wordmark--logo img { height: 40px; margin: 0 auto; } }
+.ensemble { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.25rem 2rem; margin-top: 1rem; }
+.ensemble h3 { margin: 0 0 .35rem; color: var(--cl-navy); }
+.ensemble ul { list-style: none; padding: 0; margin: 0; }
+.ensemble li { padding: .15rem 0; }
+.button { display: inline-block; padding: .7rem 1.2rem; background: var(--cl-navy); color: #fff; border-radius: var(--cl-radius); text-decoration: none; }
+.button:hover, .button:focus-visible { background: #2c3f66; color: #fff; }
