@@ -1,0 +1,97 @@
+# Sprache erzeugen + Vorschau / Live schalten
+# ------------------------------------------
+# Gestartet von der Redaktion (Websites → Sprachen je Website):
+#   „Sprache erzeugen“  → sprache=<code>, ziel=vorschau
+#       übersetzt alles Fehlende (scripts/sprache.mjs), checkt es ein und lädt
+#       eine Vorschau hoch: https://sprache-<code>-<worker>.<konto>.workers.dev
+#   „Live schalten“      → sprache leer, ziel=live
+#       baut und deployt die Website auf die echte Domain.
+# Geht auch von Hand: Reiter „Actions“ → „Sprache“ → „Run workflow“.
+#
+# Secrets im Repo: ANTHROPIC_API_KEY, CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID
+# (setzt „Sprach-Knopf einrichten.command“). Gepflegt in cleebration-web/_sprache/.
+
+name: Sprache
+run-name: "Sprache ${{ inputs.sprache || '–' }} · ${{ inputs.ziel }}"
+
+on:
+  workflow_dispatch:
+    inputs:
+      sprache:
+        description: "Sprachcode, z. B. fr (leer = nur bauen/deployen)"
+        required: false
+        default: ""
+      ziel:
+        description: "vorschau oder live"
+        required: true
+        default: vorschau
+        type: choice
+        options: [vorschau, live]
+
+concurrency:
+  group: sprache
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  sprache:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      SPRACHE: ${{ inputs.sprache }}
+      ZIEL: ${{ inputs.ziel }}
+    steps:
+      - name: Eingaben prüfen
+        run: |
+          if [ -n "$SPRACHE" ] && ! echo "$SPRACHE" | grep -Eq '^[a-z]{2}(-[A-Za-z0-9]{2,8})?$'; then
+            echo "Ungültiger Sprachcode: $SPRACHE"; exit 1
+          fi
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Übersetzen
+        if: env.SPRACHE != ''
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node scripts/sprache.mjs "$SPRACHE"
+
+      - name: Übersetzung einchecken
+        if: env.SPRACHE != ''
+        run: |
+          git config user.name "Redaktion"
+          git config user.email "redaktion@cleebration.com"
+          git add -A src public/assets site.config.mjs
+          if ! git diff --cached --quiet; then
+            git commit -m "Sprache $SPRACHE übersetzt (Redaktion)"
+            git pull --rebase && git push
+          fi
+
+      - name: Vorschau hochladen
+        if: env.ZIEL == 'vorschau'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          ALIAS="sprache-$(echo "${SPRACHE:-vorschau}" | tr 'A-Z' 'a-z')"
+          [ "$ALIAS" = "sprache-vorschau" ] && ALIAS="vorschau"
+          npm run build
+          npx wrangler versions upload --preview-alias "$ALIAS" | tee wrangler.log
+          { echo; echo "**Vorschau:**"; grep -oE 'https://[^ ]+workers\.dev' wrangler.log | sort -u; } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Live deployen
+        if: env.ZIEL == 'live'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          npm run deploy
+          echo "**Live deployt.**" >> "$GITHUB_STEP_SUMMARY"
