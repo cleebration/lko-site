@@ -441,13 +441,14 @@ class NewsletterSignup extends HTMLElement {
         const successText = this.attr("success-text", t.erfolg);
         this._form.classList.add("hidden");
         this._fertig = true;   // ab hier nicht mehr neu zeichnen
-        this.setMsg("success", body.message || successText);
+        // PATCH lko-site: eigene, übersetzte Texte statt der (deutschen) Server-Meldung.
+        this.setMsg("success", successText);
         this.dispatchEvent(new CustomEvent("nl:subscribed", {
           bubbles: true, composed: true, detail: { email }
         }));
       } else {
         const errText = this.attr("error-text", t.fehler);
-        this.setMsg("error", body.message || errText);
+        this.setMsg("error", (this._sprache || "de").startsWith("de") && body.message ? body.message : errText);
         this._button.disabled = false;
         this._button.textContent = originalLabel;
       }
