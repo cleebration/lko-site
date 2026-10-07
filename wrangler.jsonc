@@ -8,13 +8,13 @@
   "workers_dev": true,
   "preview_urls": true,
 
-  // Die eigenen Namen — ERST in Schritt 2 einkommentieren (nach dem 05.11.2026).
-  // Cloudflare legt die DNS-Einträge beim Deploy selbst an; die Wix-Einträge
-  // (A @ ×3, CNAME www) müssen vorher weg. m. war auf Wix nicht eingetragen.
-  // "routes": [
-  //   { "pattern": "linzer-kammerorchester.at",     "custom_domain": true },
-  //   { "pattern": "www.linzer-kammerorchester.at", "custom_domain": true }
-  // ],
+  // Die eigenen Namen (Schritt 2, aktiv seit Oktober 2026). Cloudflare legt die
+  // DNS-Einträge beim Deploy selbst an; die Wix-Einträge (A @ ×3, CNAME www)
+  // mussten vorher weg. Der Worker führt linzer-kammerorchester.at auf www.
+  "routes": [
+    { "pattern": "linzer-kammerorchester.at",     "custom_domain": true },
+    { "pattern": "www.linzer-kammerorchester.at", "custom_domain": true }
+  ],
 
   // Newsletter-Secrets NICHT hier, sondern einmalig per
   //   npx wrangler secret put EMAILOCTOPUS_API_KEY
