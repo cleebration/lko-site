@@ -36,13 +36,13 @@ export async function onRequestPost({ request, env }) {
     return json(400, { message: "Ungültige Anfrage." });
   }
 
-  const { email = "", name = "", consent, website } = body;
+  const { email = "", name = "", firstName = "", lastName = "", salutation = "", consent, website } = body;
 
   // Honeypot: Bots füllen dieses Feld. Freundlich abnicken, nichts speichern.
   if (website) return json(200, { message: "Danke!" });
 
   if (!EMAIL_RE.test(String(email)) || String(email).length > 254) {
-    return json(400, { message: "Bitte gib eine gültige E-Mail-Adresse an." });
+    return json(400, { message: "Bitte geben Sie eine gültige E-Mail-Adresse an." });
   }
   if (!consent) {
     return json(400, { message: "Ohne Einwilligung geht es leider nicht." });
@@ -57,14 +57,27 @@ export async function onRequestPost({ request, env }) {
 
   const tags = String(env.EMAILOCTOPUS_TAGS || "")
     .split(",").map((t) => t.trim()).filter(Boolean);
-  const fields = name ? { FirstName: String(name).slice(0, 100) } : undefined;
+  // PATCH lko-site: Anrede, Vor- und Nachname für personalisierte Newsletter.
+  // Anrede geht in ein eigenes Feld der Liste (Tag per EMAILOCTOPUS_FIELD_SALUTATION,
+  // Standard "Anrede"). Fehlt das Feld in EmailOctopus, wird ohne Anrede gespeichert.
+  if (salutation && !["Herr", "Frau"].includes(String(salutation))) {
+    return json(400, { message: "Ungültige Anrede." });
+  }
+  const first = String(firstName || name).trim().slice(0, 100);
+  const last = String(lastName).trim().slice(0, 100);
+  const salutationTag = env.EMAILOCTOPUS_FIELD_SALUTATION || "Anrede";
+  const baseFields = {};
+  if (first) baseFields.FirstName = first;
+  if (last) baseFields.LastName = last;
+  const fullFields = salutation ? { ...baseFields, [salutationTag]: String(salutation) } : baseFields;
+  let fields = Object.keys(fullFields).length ? fullFields : undefined;
   const v1 = env.EMAILOCTOPUS_API_VERSION === "v1";
 
   const url = v1
     ? `https://emailoctopus.com/api/1.6/lists/${listId}/contacts`
     : `https://api.emailoctopus.com/lists/${listId}/contacts`;
 
-  const init = v1
+  const makeInit = (fields) => v1
     ? {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -78,18 +91,27 @@ export async function onRequestPost({ request, env }) {
 
   let res;
   try {
-    res = await fetch(url, init);
+    res = await fetch(url, makeInit(fields));
+    // Feld „Anrede" in der Liste nicht angelegt? Dann ohne Anrede nochmal.
+    if (res.status === 400 && salutation && fields && salutationTag in fields) {
+      const txt = await res.clone().text().catch(() => "");
+      if (/field|merge|tag/i.test(txt)) {
+        console.warn("EmailOctopus kennt das Feld", salutationTag, "nicht – speichere ohne Anrede");
+        fields = Object.keys(baseFields).length ? baseFields : undefined;
+        res = await fetch(url, makeInit(fields));
+      }
+    }
   } catch (err) {
     console.error("EmailOctopus nicht erreichbar:", err);
-    return json(502, { message: "Die Anmeldung hat gerade nicht geklappt. Bitte später noch einmal." });
+    return json(502, { message: "Die Anmeldung hat gerade nicht geklappt. Bitte versuchen Sie es später noch einmal." });
   }
 
   // Bereits eingetragen? Absichtlich wie Erfolg behandeln —
   // sonst verrät die Seite, wer im Verteiler steht.
   if (res.ok || res.status === 409) {
-    return json(200, { message: "Fast geschafft — bitte bestätige die E-Mail in deinem Postfach." });
+    return json(200, { message: "Fast geschafft — bitte bestätigen Sie die E-Mail in Ihrem Postfach." });
   }
 
   console.error("EmailOctopus antwortete mit", res.status, await res.text().catch(() => ""));
-  return json(502, { message: "Die Anmeldung hat gerade nicht geklappt. Bitte später noch einmal." });
+  return json(502, { message: "Die Anmeldung hat gerade nicht geklappt. Bitte versuchen Sie es später noch einmal." });
 }

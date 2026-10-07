@@ -32,6 +32,8 @@ const STRINGS = {
     spaeter: "Spätere Veranstaltung",
     alleTermine: "Alle Veranstaltungen",
     fallbackNote: "Übersetzung folgt",
+    // PATCH Redaktion 2026-10-08: mehrere Termine, Programm, Hinweis, Nachbericht
+    weitereTermine: "Alle Termine", programm: "Programm", mitwirkende: "Mitwirkende", nachbericht: "Nachbericht", fotos: "Fotos ansehen", einlass: "Einlass", verschobenAuf: "neuer Termin", dieserTermin: "dieser Termin",
     // PATCH kalender (ersetzt AddEvent)
     kalender: "In den Kalender",
     abo: "Kalender abonnieren",
@@ -49,6 +51,7 @@ const STRINGS = {
     spaeter: "Later event",
     alleTermine: "All events",
     fallbackNote: "Translation pending",
+    weitereTermine: "All dates", programm: "Programme", mitwirkende: "Performers", nachbericht: "Review", fotos: "View photos", einlass: "Doors", verschobenAuf: "new date", dieserTermin: "this date",
     // PATCH kalender (replaces AddEvent)
     kalender: "Add to calendar",
     abo: "Subscribe to calendar",
@@ -111,6 +114,9 @@ const STYLES = `
   .detail__title { font-family: var(--evt-font-display); font-size: clamp(1.8rem, 4vw, 2.6rem); margin: 0 0 .5rem; }
   .detail__facts { display: flex; gap: 1.4rem; flex-wrap: wrap; color: var(--evt-muted); margin-bottom: 1.4rem; }
   .detail__body { max-width: 70ch; }
+  .detail__h { font-family: var(--evt-font-display); font-size: 1.3rem; margin: 1.6rem 0 .5rem; }
+  .hinweis { max-width: 70ch; border-left: 4px solid var(--evt-accent); padding: .6rem 1rem; background: color-mix(in srgb, var(--evt-accent) 8%, transparent); }
+  .termine-liste { padding-left: 1.1rem; } .termine-liste li { margin: .3rem 0; } .termine-liste li.weg { text-decoration: line-through; opacity: .6; }
   .detail__body a { color: var(--evt-accent); }
   /* Blaettern zwischen Terminen. Zwei Spalten, damit der spaetere Termin
      rechts bleibt, auch wenn es links keinen frueheren gibt. */
@@ -413,16 +419,33 @@ class EventDetail extends HTMLElement {
       : "";
 
     const statusLabel = t.status[e.status];
+    // PATCH Redaktion 2026-10-08: weitere Termine, Hinweis, Programm, Mitwirkende, Nachbericht, Fotos
+    const L = (k) => t[k] || STRINGS[DEFAULT_LANG][k] || k;
+    const tag = (iso) => { try { return new Intl.DateTimeFormat(t.locale, { timeZone: e.timeZone || "Europe/Vienna", weekday: "short", day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" }).format(new Date(iso)); } catch { return iso; } };
+    const termine = Array.isArray(e.termine) && e.termine.length > 1
+      ? `<h2 class="detail__h">${esc(L("weitereTermine"))}</h2><ul class="termine-liste">${e.termine.map((x) => {
+          const st = t.status[x.status];
+          const text = `${esc(tag(x.date))} · ${esc([x.venue, x.city].filter(Boolean).join(", "))}${st ? ` · <b>${esc(st)}</b>` : ""}`;
+          return `<li class="${x.status === "cancelled" ? "weg" : ""}">${x.slug === e.slug ? `<b>${text}</b> <small>(${esc(L("dieserTermin"))})</small>` : `<a href="${esc(nachbarUrl(x.slug))}">${text}</a>`}</li>`;
+        }).join("")}</ul>` : "";
     wrap.innerHTML = `
       ${e.image ? `<div class="detail__media"><img src="${e.image}" alt=""></div>` : ""}
       <h1 class="detail__title">${esc(e.title)}</h1>
       <div class="detail__facts">
         <span>${fmtDate(e.date, e.timeZone, t.locale)}</span>
+        ${e.doorsOpen ? `<span>${esc(L("einlass"))} ${esc(e.doorsOpen)}</span>` : ""}
         ${e.venue ? `<span>${esc(e.venue)}${e.city ? ", " + esc(e.city) : ""}</span>` : ""}
-        ${statusLabel ? `<span class="pill">${statusLabel}</span>` : ""}
+        ${e.price ? `<span>${esc(e.price)}</span>` : ""}
+        ${statusLabel ? `<span class="pill">${statusLabel}${e.status === "postponed" && e.verschobenAuf ? ` – ${esc(L("verschobenAuf"))}: ${esc(tag(e.verschobenAuf))}` : ""}</span>` : ""}
         ${e.translated === false ? `<span class="pill pill--muted">${t.fallbackNote}</span>` : ""}
       </div>
+      ${e.statusNote ? `<p class="hinweis">${esc(e.statusNote)}</p>` : ""}
       <div class="detail__body">${e.body || ""}</div>
+      ${e.programm ? `<h2 class="detail__h">${esc(L("programm"))}</h2><div class="detail__body">${e.programm}</div>` : ""}
+      ${Array.isArray(e.performers) && e.performers.length ? `<h2 class="detail__h">${esc(L("mitwirkende"))}</h2><p class="detail__body">${e.performers.map(esc).join(" · ")}</p>` : ""}
+      ${termine}
+      ${e.nachbericht ? `<h2 class="detail__h">${esc(L("nachbericht"))}</h2><div class="detail__body">${e.nachbericht}</div>` : ""}
+      ${e.fotosUrl ? `<p><a class="btn" href="${esc(e.fotosUrl)}" target="_blank" rel="noopener">${esc(L("fotos"))}</a></p>` : ""}
       <div class="aktionen">
         ${e.ticketUrl ? `<a class="btn" href="${e.ticketUrl}" target="_blank" rel="noopener">${t.tickets}</a>` : ""}
         ${kalenderKnopf(e, t, feed, absolut(nachbarUrl(e.slug), location.href))}

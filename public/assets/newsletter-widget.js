@@ -67,7 +67,8 @@ const STYLES = `
 
   label { font-size: .8rem; font-weight: 600; display: block; margin-bottom: .25rem; }
   .field input[type="email"],
-  .field input[type="text"] {
+  .field input[type="text"],
+  .field select {
     width: 100%;
     padding: .7rem .8rem;
     font: inherit;
@@ -76,6 +77,9 @@ const STYLES = `
     border: 1px solid var(--nl-border);
     border-radius: var(--nl-radius);
   }
+  .names { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--nl-gap); }
+  @media (max-width: 480px) { .names { grid-template-columns: minmax(0, 1fr); } }
+  .field select:focus-visible,
   .field input:focus-visible {
     outline: 2px solid var(--nl-accent);
     outline-offset: 1px;
@@ -158,17 +162,24 @@ const SPRACHEN = {
     knopf: "Anmelden",
     sendet: "Sende …",
     vorname: "Vorname",
+    nachname: "Nachname",
+    anrede: "Anrede",
+    anredeWaehlen: "Bitte wählen",
+    herr: "Herr",
+    frau: "Frau",
+    fehlerAnrede: "Bitte wählen Sie eine Anrede.",
+    fehlerName: "Bitte geben Sie Vor- und Nachnamen an.",
     email: "E-Mail-Adresse",
     emailBeispiel: "name@beispiel.at",
     einwilligung: "Ja, ich möchte den Newsletter erhalten. Die Einwilligung kann ich jederzeit widerrufen.",
     datenschutz: "Datenschutz",
     honeypot: "Bitte dieses Feld leer lassen",
     kunstprojekt: "Ein Kunstprojekt von",
-    fehlerEmail: "Bitte gib eine gültige E-Mail-Adresse ein.",
-    fehlerEinwilligung: "Bitte bestätige die Einwilligung, um fortzufahren.",
-    erfolg: "Fast geschafft! Bitte bestätige deine Anmeldung über den Link in der E-Mail, die wir dir gerade geschickt haben.",
-    fehler: "Das hat leider nicht geklappt. Bitte versuche es später noch einmal.",
-    verbindungsfehler: "Verbindungsfehler. Bitte versuche es später noch einmal."
+    fehlerEmail: "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+    fehlerEinwilligung: "Bitte bestätigen Sie die Einwilligung, um fortzufahren.",
+    erfolg: "Fast geschafft! Bitte bestätigen Sie Ihre Anmeldung über den Link in der E-Mail, die wir Ihnen gerade geschickt haben.",
+    fehler: "Das hat leider nicht geklappt. Bitte versuchen Sie es später noch einmal.",
+    verbindungsfehler: "Verbindungsfehler. Bitte versuchen Sie es später noch einmal."
   },
   en: {
     ueberschrift: "Sign up for the newsletter",
@@ -176,6 +187,13 @@ const SPRACHEN = {
     knopf: "Sign up",
     sendet: "Sending …",
     vorname: "First name",
+    nachname: "Last name",
+    anrede: "Salutation",
+    anredeWaehlen: "Please choose",
+    herr: "Mr",
+    frau: "Ms",
+    fehlerAnrede: "Please choose a salutation.",
+    fehlerName: "Please enter your first and last name.",
     email: "Email address",
     emailBeispiel: "name@example.com",
     einwilligung: "Yes, I would like to receive the newsletter. I can withdraw my consent at any time.",
@@ -267,6 +285,8 @@ class NewsletterSignup extends HTMLElement {
     const buttonLabel = this.attr("button-label", t.knopf);
     const privacyUrl = this.attr("privacy-url", "");
     const showName = this.hasFlag("name-field");
+    // PATCH lko-site: full-name = Anrede (Herr/Frau) + Vor- + Nachname, alle Pflicht.
+    const fullName = this.hasFlag("full-name");
     const showCredit = this.hasFlag("credit");
     const creditLogo = this.attr("credit-logo", "");
 
@@ -275,7 +295,26 @@ class NewsletterSignup extends HTMLElement {
       ? ` <a href="${privacyUrl}" target="_blank" rel="noopener">${t.datenschutz}</a>`
       : "";
 
-    const nameField = showName
+    const nameField = fullName
+      ? `<div class="field">
+           <label for="nl-anrede">${t.anrede}</label>
+           <select id="nl-anrede" name="salutation" required>
+             <option value="">${t.anredeWaehlen}</option>
+             <option value="Herr">${t.herr}</option>
+             <option value="Frau">${t.frau}</option>
+           </select>
+         </div>
+         <div class="names">
+           <div class="field">
+             <label for="nl-first">${t.vorname}</label>
+             <input id="nl-first" name="firstName" type="text" autocomplete="given-name" required maxlength="100" />
+           </div>
+           <div class="field">
+             <label for="nl-last">${t.nachname}</label>
+             <input id="nl-last" name="lastName" type="text" autocomplete="family-name" required maxlength="100" />
+           </div>
+         </div>`
+      : showName
       ? `<div class="field">
            <label for="nl-name">${t.vorname}</label>
            <input id="nl-name" name="name" type="text" autocomplete="given-name" />
@@ -350,7 +389,11 @@ class NewsletterSignup extends HTMLElement {
 
     const data = new FormData(this._form);
     const email = (data.get("email") || "").toString().trim();
-    const name = (data.get("name") || "").toString().trim();
+    const firstName = (data.get("firstName") || "").toString().trim();
+    const lastName = (data.get("lastName") || "").toString().trim();
+    const salutation = (data.get("salutation") || "").toString();
+    const name = firstName || (data.get("name") || "").toString().trim();
+    const fullName = this.hasFlag("full-name");
     const consent = data.get("consent") === "on";
     const honeypot = (data.get("website") || "").toString();
 
@@ -358,6 +401,16 @@ class NewsletterSignup extends HTMLElement {
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       this.setMsg("error", t.fehlerEmail);
       this.shadowRoot.querySelector('input[name="email"]').focus();
+      return;
+    }
+    if (fullName && !salutation) {
+      this.setMsg("error", t.fehlerAnrede);
+      this.shadowRoot.querySelector('select[name="salutation"]').focus();
+      return;
+    }
+    if (fullName && (!firstName || !lastName)) {
+      this.setMsg("error", t.fehlerName);
+      this.shadowRoot.querySelector(firstName ? 'input[name="lastName"]' : 'input[name="firstName"]').focus();
       return;
     }
     if (!consent) {
@@ -378,7 +431,7 @@ class NewsletterSignup extends HTMLElement {
       const res = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, name, consent, website: honeypot, site }),
+        body: JSON.stringify({ email, name, firstName, lastName, salutation, consent, website: honeypot, site }),
       });
 
       let body = {};
