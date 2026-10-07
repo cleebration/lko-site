@@ -138,6 +138,7 @@ const globals = {
   FEED_BLOG: config.feeds.blog,
   FEED_EVENTS: config.feeds.events,
   IMG_LOGO: image(config.images.logo),
+  IMG_LOGO_COLOR: image(config.images.logoColor),
   IMG_OG: image(config.images.og)
 };
 

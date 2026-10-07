@@ -21,7 +21,16 @@
     "cardNewsletter": "Sign up for the newsletter",
     "cardOrchestra": "Our orchestra",
     "cardJoin": "Request to join",
-    "news": "News"
+    "news": "News",
+    "details": "Concert details",
+    "allConcerts": "All concerts",
+    "date": "Date",
+    "time": "Starts",
+    "place": "Venue",
+    "recent": "Recently performed",
+    "subscribe": "Sign up",
+    "request": "Send request",
+    "none": "Our next dates will be announced soon."
   },
   "events": {
     "upcoming": "Upcoming concerts",

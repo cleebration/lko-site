@@ -1,18 +1,17 @@
 <footer class="site-foot">
-  <div class="wrap">
-    <a class="site-foot__mail" href="mailto:{{MAIL}}">{{MAIL}}</a>
-
-    <!-- Credit-Baustein (CLEEBRATION-STACK-KONTEXT.md, Abschnitt 4).
-         Beim Vereinsorchester bewusst „Website von" statt „Ein Kunstprojekt von". -->
-    <p class="site-foot__credit">
-      <span data-lang="de"><cleebration-credit logo="/assets/brand/cleebration-wortmarke.svg" label="Website von"></cleebration-credit></span>
-      <span data-lang="en"><cleebration-credit logo="/assets/brand/cleebration-wortmarke.svg" label="Website by"></cleebration-credit></span>
-    </p>
-
-    <p class="site-foot__legal">
-      <a href="/impressum" data-i18n="nav.imprint">Impressum</a> ·
+  <div class="wrap site-foot__grid">
+    <div><img src="{{IMG_LOGO}}" alt="Linzer Kammerorchester" width="180" height="46" class="site-foot__logo" /></div>
+    <div>Linzer Kammerorchester<br />Schillerstraße 5, 4020 Linz<br />
+      <a class="site-foot__mail" href="mailto:{{MAIL}}">{{MAIL}}</a></div>
+    <div>
+      <a href="/impressum" data-i18n="nav.imprint">Impressum</a><br />
       <a href="/datenschutz" data-i18n="nav.privacy">Datenschutz</a>
-    </p>
-    <p>© <span data-year>2026</span> Linzer Kammerorchester</p>
+      <!-- Credit-Baustein (CLEEBRATION-STACK-KONTEXT.md, Abschnitt 4). -->
+      <p class="site-foot__credit">
+        <span data-lang="de"><cleebration-credit logo="/assets/brand/cleebration-wortmarke.svg" label="Website von"></cleebration-credit></span>
+        <span data-lang="en"><cleebration-credit logo="/assets/brand/cleebration-wortmarke.svg" label="Website by"></cleebration-credit></span>
+      </p>
+      <p>© <span data-year>2026</span> Linzer Kammerorchester</p>
+    </div>
   </div>
 </footer>

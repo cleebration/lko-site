@@ -8,36 +8,74 @@
 }
 -->
 
-<!-- Text der Wix-Startseite, wörtlich übernommen (Stand 06.10.2026). -->
-<h1 class="page-title" data-i18n="home.next">Unser nächster Auftritt</h1>
-<div class="wrap">
-  <event-list feed="{{FEED_EVENTS}}" detail-url="/event" show="upcoming"></event-list>
-</div>
-
-<section class="hero wrap">
-  <h2 class="hero__kicker" data-i18n="home.who">Wer wir sind</h2>
-  <div class="hero__text">
-    <div data-lang="de">
-      <p>Wir sind ein besonderes Ensemble mit einem vielfältigen Repertoire von Barock zur Moderne, mit Bekanntem und bisher Ungehörtem.</p>
-      <p>Wir spielen zwei bis vier Konzerte im Jahr in Linz und Umgebung.</p>
+<!-- Nächster Termin: füllt site.js aus dem Events-Feed ({{FEED_EVENTS}}). -->
+<section class="next" data-next-feed="{{FEED_EVENTS}}">
+  <div class="wrap next__grid">
+    <div class="next__main">
+      <p class="kicker" data-i18n="home.next">Unser nächster Auftritt</p>
+      <h1 class="next__title" data-next="title">Linzer Kammerorchester</h1>
+      <p class="next__summary" data-next="summary"></p>
+      <div class="next__actions">
+        <a class="btn btn--light" data-next="link" href="/konzerte" data-i18n="home.details">Zum Konzert</a>
+        <a class="btn btn--ghost" href="/konzerte" data-i18n="home.allConcerts">Alle Konzerte</a>
+      </div>
     </div>
-    <div data-lang="en">
-      <p>We are a special ensemble with a varied repertoire from the Baroque to the modern era – familiar works and pieces you have never heard before.</p>
-      <p>We play two to four concerts a year in Linz and the surrounding area.</p>
-    </div>
+    <dl class="next__facts" data-next="facts" hidden>
+      <div><dt data-i18n="home.date">Datum</dt><dd class="next__big" data-next="date"></dd></div>
+      <div><dt data-i18n="home.time">Beginn</dt><dd class="next__big" data-next="time"></dd></div>
+      <div class="next__wide"><dt data-i18n="home.place">Ort</dt><dd data-next="place"></dd></div>
+    </dl>
   </div>
 </section>
 
-<div class="wrap">
-  <div class="contact-grid">
-    <a class="contact-card" href="/konzerte"><h3 data-i18n="home.cardConcerts">Unsere Konzerte</h3></a>
-    <a class="contact-card" href="/newsletter"><h3 data-i18n="home.cardNewsletter">Anmeldung zum Newsletter</h3></a>
-    <a class="contact-card" href="/orchester"><h3 data-i18n="home.cardOrchestra">Unser Orchester</h3></a>
-    <a class="contact-card" href="/mitspielen"><h3 data-i18n="home.cardJoin">Anfrage zum Mitspielen</h3></a>
+<!-- Text der Wix-Startseite „Wer wir sind“, ergänzt um zwei Sätze der Orchester-Seite. -->
+<section class="wrap intro">
+  <div>
+    <p class="kicker kicker--wine" data-i18n="home.who">Wer wir sind</p>
+    <h2 class="intro__title">
+      <span data-lang="de">Von Barock bis zur Moderne – mit Bekanntem und bisher Ungehörtem.</span>
+      <span data-lang="en">From the Baroque to the modern era – familiar works and pieces you have never heard.</span>
+    </h2>
   </div>
-</div>
+  <div class="intro__text">
+    <div data-lang="de">
+      <p>Wir sind ein besonderes Ensemble mit einem vielfältigen Repertoire. Wir spielen zwei bis vier Konzerte im Jahr in Linz und Umgebung.</p>
+      <p>Uraufführungen, zeitgenössische Musik und die Förderung talentierter Nachwuchskräfte sind uns ein besonderes Anliegen. 2004 erhielt das Orchester die Kulturmedaille der Stadt Linz.</p>
+    </div>
+    <div data-lang="en">
+      <p>We are a special ensemble with a varied repertoire. We play two to four concerts a year in Linz and the surrounding area.</p>
+      <p>Premieres, contemporary music and the support of talented young musicians are close to our heart. In 2004 the orchestra received the Culture Medal of the City of Linz.</p>
+    </div>
+    <p><a class="textlink" href="/orchester" data-i18n="home.cardOrchestra">Unser Orchester</a> →</p>
+  </div>
+</section>
 
-<h2 class="section-title" data-i18n="home.news">Neuigkeiten</h2>
-<div class="wrap">
+<section class="band">
+  <div class="wrap">
+    <div class="band__head">
+      <h2 class="h2" data-i18n="home.recent">Zuletzt gespielt</h2>
+      <a class="textlink" href="/konzerte" data-i18n="home.allConcerts">Alle Konzerte</a>
+    </div>
+    <event-list feed="{{FEED_EVENTS}}" detail-url="/event" show="past" limit="3"></event-list>
+  </div>
+</section>
+
+<section class="wrap block">
+  <h2 class="h2" data-i18n="home.news">Neuigkeiten</h2>
   <blog-list feed="{{FEED_BLOG}}" post-url="/post" page-size="3" credit="off"></blog-list>
-</div>
+</section>
+
+<section class="wrap panels">
+  <div class="panel panel--wine">
+    <h2 class="panel__title">Newsletter</h2>
+    <p data-lang="de">Konzerttermine und Neuigkeiten des Linzer Kammerorchesters per E-Mail.</p>
+    <p data-lang="en">Concert dates and news from the Linz Chamber Orchestra by email.</p>
+    <a class="btn btn--rose" href="/newsletter" data-i18n="home.subscribe">Anmelden</a>
+  </div>
+  <div class="panel">
+    <h2 class="panel__title" data-i18n="nav.join">Mitspielen</h2>
+    <p data-lang="de">Du spielst ein Streichinstrument und möchtest bei uns mitspielen? Schreib uns – mit Instrument und gerne einem Link zu deinem Spiel.</p>
+    <p data-lang="en">You play a string instrument and would like to join us? Write to us with your instrument and, if you like, a link to your playing.</p>
+    <a class="btn btn--outline" href="/mitspielen" data-i18n="home.request">Anfrage senden</a>
+  </div>
+</section>

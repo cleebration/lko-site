@@ -19,18 +19,22 @@
   /* Marke Linzer Kammerorchester: „tiefes Blau, formell"
      (CLEEBRATION-STACK-KONTEXT.md, Abschnitt 4). Das Logo bleibt in seinem
      Weinrot (#861C33) — es steht im Kopf, das Blau trägt den Rest. */
-  --cl-navy:        #1F2E4D;   /* Tiefblau, Akzent und aktive Navigation */
-  --cl-navy-pale:   #e9edf4;
-  --cl-gold:        #B9C3D4;   /* Silbergrau, Linie unter dem Kopf */
-  --cl-gold-dark:   #5D6B84;
-  --cl-red:         #861C33;   /* Logo-Weinrot */
+  /* Marke Linzer Kammerorchester (Corporate Design 2016, modernisiert
+     06.10.2026): Dunkelrot #861C33 trägt alles, Rosé nur als Akzent.
+     Die Variablennamen --cl-* bleiben, damit das Kit-Mapping unten gilt. */
+  --cl-navy:        #861C33;   /* Dunkelrot (Pantone 202) */
+  --cl-navy-pale:   #F6E8EA;
+  --cl-gold:        #F6C9D0;   /* Rosé hell – Text auf Dunkelrot */
+  --cl-gold-dark:   #5C4F53;
+  --cl-red:         #C8344A;   /* Rosé für Knöpfe (weiß darauf lesbar) */
 
-  --cl-ink:         #1d2230;
-  --cl-muted:       #5f6675;
-  --cl-heading:     #7a8296;
+  --cl-ink:         #1E1418;
+  --cl-muted:       #5C4F53;
+  --cl-heading:     #1E1418;
   --cl-surface:     #ffffff;
-  --cl-bg:          #f7f8fa;
-  --cl-border:      #e6e0d8;
+  --cl-bg:          #FBF8F6;
+  --cl-band:        #F2ECE9;
+  --cl-border:      #E6DCD8;
 
 /* ---- Schrift ----------------------------------------------------------
      EB Garamond für Überschriften, Work Sans für alles andere.
@@ -384,12 +388,84 @@ img { max-width: 100%; height: auto; }
 }
 
 
-/* ---- linzer-kammerorchester.at ------------------------------------------ */
-.wordmark--logo img { display: block; height: 52px; width: auto; }
-@media (max-width: 640px) { .wordmark--logo img { height: 40px; margin: 0 auto; } }
+/* ---- linzer-kammerorchester.at · Design 2026 ----------------------------- */
+.site-top { background: var(--cl-navy); border-bottom: 0; color: #fff; }
+.site-top__inner { padding-block: 1.1rem; }
+.wordmark--logo img { display: block; height: 44px; width: auto; }
+.site-top .mainnav a { color: #fff; font-weight: 500; letter-spacing: .02em; border-radius: 999px; }
+.site-top .mainnav a:hover { background: rgba(255,255,255,.12); }
+.site-top .mainnav a[aria-current="page"] { background: rgba(255,255,255,.16); color: #fff; border-color: transparent; }
+.site-top .mainnav a.nav-pill { background: #fff; color: var(--cl-navy); font-weight: 600; margin-left: .35rem; }
+.site-top .mainnav a.nav-pill:hover { background: var(--cl-gold); }
+.site-top lang-switcher { --li18n-text: #fff; --li18n-muted: #fff; --li18n-border: rgba(255,255,255,.55); --li18n-accent: #fff; --li18n-accent-contrast: #861C33; --li18n-radius: 999px; }
+
+.kicker { margin: 0 0 1rem; font-size: .8rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--cl-gold); }
+.kicker--wine { color: var(--cl-navy); }
+.h2 { font-family: var(--cl-font-display); font-weight: 400; font-size: clamp(2rem, 4vw, 2.9rem); line-height: 1.1; margin: 0 0 1.75rem; }
+.textlink { color: var(--cl-navy); font-weight: 600; text-decoration: none; }
+.textlink:hover { text-decoration: underline; }
+
+.btn { display: inline-flex; align-items: center; min-height: 48px; padding: 0 1.6rem; border-radius: 999px; font-weight: 600; text-decoration: none; border: 1.5px solid transparent; transition: background-color .15s ease, color .15s ease; }
+.btn--light { background: #fff; color: var(--cl-navy); }
+.btn--light:hover { background: var(--cl-gold); }
+.btn--ghost { color: #fff; border-color: rgba(255,255,255,.6); font-weight: 500; }
+.btn--ghost:hover { background: rgba(255,255,255,.12); }
+.btn--rose { background: var(--cl-red); color: #fff; }
+.btn--rose:hover { background: #A92A3D; }
+.btn--outline { color: var(--cl-navy); border-color: var(--cl-navy); }
+.btn--outline:hover { background: var(--cl-navy-pale); }
+.button { display: inline-flex; align-items: center; min-height: 48px; padding: 0 1.6rem; border-radius: 999px; background: var(--cl-navy); color: #fff; font-weight: 600; text-decoration: none; }
+.button:hover, .button:focus-visible { background: #6B1628; color: #fff; }
+
+.next { background: var(--cl-navy); color: #fff; }
+.next__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: 3rem; align-items: end; padding-block: 4rem 5.5rem; }
+.next__title { margin: 0; font-family: var(--cl-font-display); font-weight: 400; font-size: clamp(3.2rem, 9vw, 6rem); line-height: .98; letter-spacing: -0.02em; hyphens: auto; }
+.next__summary { margin: 1.25rem 0 0; font-family: var(--cl-font-display); font-style: italic; font-size: 1.6rem; line-height: 1.3; color: var(--cl-gold); }
+.next__summary:empty { display: none; }
+.next__actions { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: 2rem; }
+.next__facts { margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.6rem 2rem; border-top: 1px solid rgba(255,255,255,.3); padding-top: 1.6rem; }
+.next__facts dt { font-size: .75rem; letter-spacing: .16em; text-transform: uppercase; color: var(--cl-gold); }
+.next__facts dd { margin: .35rem 0 0; font-size: 1.1rem; line-height: 1.45; }
+.next__facts .next__big { font-family: var(--cl-font-display); font-size: 2rem; line-height: 1.15; }
+.next__wide { grid-column: 1 / -1; }
+
+.intro { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); gap: 3rem; padding-block: 5.5rem 4.5rem; }
+.intro__title { margin: 0; font-family: var(--cl-font-display); font-weight: 400; font-size: clamp(2.1rem, 4.4vw, 3.1rem); line-height: 1.1; }
+.intro__text { font-size: 1.1rem; line-height: 1.7; color: #3B2F33; padding-top: 2rem; }
+.intro__text p { margin: 0 0 1rem; }
+
+.band { background: var(--cl-band); padding-block: 4.5rem; }
+.band__head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 1rem; }
+.block { padding-block: 5rem 3rem; }
+
+.panels { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: 1.6rem; padding-bottom: 5rem; }
+.panel { background: #fff; border: 1px solid var(--cl-border); border-radius: 10px; padding: 2.5rem; display: flex; flex-direction: column; align-items: flex-start; gap: .4rem; }
+.panel p { margin: 0 0 1rem; font-size: 1.05rem; line-height: 1.55; color: #3B2F33; }
+.panel--wine { background: var(--cl-navy); border-color: var(--cl-navy); color: #fff; }
+.panel--wine p { color: var(--cl-gold); }
+.panel__title { margin: 0 0 .5rem; font-family: var(--cl-font-display); font-weight: 400; font-size: 2.1rem; }
+
+.page-title { color: var(--cl-ink); margin: 3.5rem 0 2rem; }
+.section-title { color: var(--cl-ink); }
+.contact-card h3 { color: var(--cl-ink); }
+.prose h2 { color: var(--cl-ink); }
+
+.site-foot { margin-top: 0; background: var(--cl-ink); color: #D8CCD0; border-top: 0; text-align: left; padding-block: 3.5rem; font-size: .95rem; }
+.site-foot__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 2rem; line-height: 1.7; }
+.site-foot a, .site-foot__legal a { color: #fff; }
+.site-foot__mail { font-family: inherit; font-size: inherit; color: #fff; text-decoration: underline; }
+.site-foot__logo { height: 34px; width: auto; }
+.site-foot__credit { color: #D8CCD0; margin: 1rem 0 .5rem; }
+
 .ensemble { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.25rem 2rem; margin-top: 1rem; }
 .ensemble h3 { margin: 0 0 .35rem; color: var(--cl-navy); }
 .ensemble ul { list-style: none; padding: 0; margin: 0; }
 .ensemble li { padding: .15rem 0; }
-.button { display: inline-block; padding: .7rem 1.2rem; background: var(--cl-navy); color: #fff; border-radius: var(--cl-radius); text-decoration: none; }
-.button:hover, .button:focus-visible { background: #2c3f66; color: #fff; }
+
+@media (max-width: 760px) {
+  .wordmark--logo { width: auto; }
+  .wordmark--logo img { height: 36px; margin: 0 auto; }
+  .next__grid { padding-block: 2.5rem 3.5rem; gap: 2rem; }
+  .intro { padding-block: 3.5rem 3rem; gap: 1rem; }
+  .intro__text { padding-top: 0; }
+}

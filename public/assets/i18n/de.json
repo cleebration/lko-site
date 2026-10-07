@@ -21,7 +21,16 @@
     "cardNewsletter": "Anmeldung zum Newsletter",
     "cardOrchestra": "Unser Orchester",
     "cardJoin": "Anfrage zum Mitspielen",
-    "news": "Neuigkeiten"
+    "news": "Neuigkeiten",
+    "details": "Zum Konzert",
+    "allConcerts": "Alle Konzerte",
+    "date": "Datum",
+    "time": "Beginn",
+    "place": "Ort",
+    "recent": "Zuletzt gespielt",
+    "subscribe": "Anmelden",
+    "request": "Anfrage senden",
+    "none": "Die nächsten Termine folgen in Kürze."
   },
   "events": {
     "upcoming": "Kommende Konzerte",

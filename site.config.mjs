@@ -26,8 +26,9 @@ export default {
   },
 
   images: {
-    logo: "/assets/img/lko-logo.png",
-    og:   "/assets/img/lko-logo-quadrat.jpg"
+    logo: "/assets/img/lko-logo-weiss.png",
+    logoColor: "/assets/img/lko-logo-rot.png",
+    og:   "/assets/img/og-lko.png"
   },
 
   // Adresse aus dem Wix-Impressum. Postfach bleibt, wo es ist (Google).

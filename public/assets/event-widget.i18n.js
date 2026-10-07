@@ -31,7 +31,12 @@ const STRINGS = {
     frueher: "Frühere Veranstaltung",
     spaeter: "Spätere Veranstaltung",
     alleTermine: "Alle Veranstaltungen",
-    fallbackNote: "Übersetzung folgt"
+    fallbackNote: "Übersetzung folgt",
+    // PATCH kalender (ersetzt AddEvent)
+    kalender: "In den Kalender",
+    abo: "Kalender abonnieren",
+    aboHinweis: "Neue Termine erscheinen dann von selbst in deinem Kalender.",
+    kal: { google: "Google Kalender", ics: "Apple Kalender / Outlook-Programm", outlook: "Outlook.com", m365: "Microsoft 365 (Arbeit/Schule)" }
   },
   en: {
     locale: "en-GB",
@@ -43,7 +48,12 @@ const STRINGS = {
     frueher: "Earlier event",
     spaeter: "Later event",
     alleTermine: "All events",
-    fallbackNote: "Translation pending"
+    fallbackNote: "Translation pending",
+    // PATCH kalender (replaces AddEvent)
+    kalender: "Add to calendar",
+    abo: "Subscribe to calendar",
+    aboHinweis: "New events will then appear in your calendar automatically.",
+    kal: { google: "Google Calendar", ics: "Apple Calendar / Outlook app", outlook: "Outlook.com", m365: "Microsoft 365 (work/school)" }
   }
 };
 const DEFAULT_LANG = "de";
@@ -120,6 +130,23 @@ const STYLES = `
   }
   .btn { display: inline-block; margin-top: 1.4rem; padding: .7rem 1.4rem; border-radius: var(--evt-radius);
     background: var(--evt-accent); color: var(--evt-accent-contrast); text-decoration: none; font-weight: 600; }
+  /* PATCH kalender: "In den Kalender" / "Kalender abonnieren" (ersetzt AddEvent) */
+  .aktionen { display: flex; flex-wrap: wrap; gap: .75rem; align-items: flex-start; margin-top: 1.4rem; }
+  .aktionen .btn { margin-top: 0; }
+  .kal { display: inline-block; }
+  .kal > summary { list-style: none; cursor: pointer; display: inline-block; padding: .7rem 1.4rem;
+    border: 1px solid var(--evt-accent); border-radius: var(--evt-radius); color: var(--evt-accent);
+    background: transparent; font-weight: 600; }
+  .kal > summary::-webkit-details-marker { display: none; }
+  .kal > summary::after { content: " ▾"; }
+  .kal[open] > summary::after { content: " ▴"; }
+  .kal > summary:focus-visible { outline: 3px solid var(--evt-accent); outline-offset: 2px; }
+  .kal__menu { margin: .4rem 0 0; padding: .3rem 0; list-style: none; background: var(--evt-surface);
+    border: 1px solid var(--evt-border); border-radius: var(--evt-radius); min-width: 16rem; }
+  .kal__menu a { display: block; padding: .5rem 1rem; color: var(--evt-text); text-decoration: none; }
+  .kal__menu a:hover, .kal__menu a:focus-visible { background: var(--evt-border); }
+  .kal__hinweis { margin: .4rem 0 0; font-size: .85rem; color: var(--evt-muted); }
+  .kal--abo { margin-top: 1.5rem; }
 `;
 
 function fmtDate(iso, tz, locale) {
@@ -158,9 +185,118 @@ function spracheBereit() {
   return Promise.race([i.ready, notausgang]).catch(() => {});
 }
 
+/* ---- PATCH kalender: Kalender-Links (ersetzt AddEvent.com) -------------
+   Google, Outlook.com und Microsoft 365 bekommen einen Link mit den Daten
+   im Aufruf. Apple und Outlook-Programm bekommen die .ics-Datei, die der
+   Hub fuer jeden Termin baut (Feld `ics`). Fehlt sie (alter Hub), wird die
+   Datei hier im Browser erzeugt. */
+const KAL_STANDARD_DAUER_MIN = 120; // gleich wie im Hub (kalender.mjs)
+
+function kalEnde(e) {
+  return e.endDate ? new Date(e.endDate)
+    : new Date(new Date(e.date).getTime() + KAL_STANDARD_DAUER_MIN * 60e3);
+}
+function kalZeit(d) { return new Date(d).toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, ""); }
+function kalOrt(e) { return [e.venue, e.address || e.city].filter(Boolean).join(", "); }
+function absolut(pfad, basis) {
+  try { return new URL(pfad, new URL(basis, location.href)).href; } catch { return pfad; }
+}
+/* Text des Kalendereintrags -- gleich wie im Hub (kalender.mjs):
+   Kurztext, Beschreibung, Tickets (nur wenn gesetzt), Details-Link.
+   Fuer die Links wird gekuerzt, weil Google/Outlook lange Adressen abschneiden. */
+function kalOhneHtml(html) {
+  return String(html ?? "")
+    .replace(/<\/(p|li|h\d)>/gi, "\n").replace(/<br\s*\/?>/gi, "\n").replace(/<[^>]+>/g, "")
+    .replace(/&nbsp;/g, " ").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/\n{3,}/g, "\n\n").trim();
+}
+function kalText(e, seite, max = 1500) {
+  const kurz = String(e.summary ?? "").trim();
+  let lang = kalOhneHtml(e.body);
+  if (kurz && lang.startsWith(kurz)) lang = lang.slice(kurz.length).trim();
+  const ende = [e.ticketUrl ? `Tickets: ${e.ticketUrl}` : "", (seite || e.url) ? `Details: ${seite || e.url}` : ""].filter(Boolean);
+  let kopf = [kurz, lang].filter(Boolean).join("\n\n");
+  if (kopf.length > max) kopf = kopf.slice(0, max).replace(/\s+\S*$/, "") + " …";
+  return [kopf, ...ende].filter(Boolean).join("\n\n");
+}
+
+function icsNotfall(e, seite) {
+  const t = (s) => String(s ?? "").replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n");
+  const z = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//cleebration//event-widget//DE", "BEGIN:VEVENT",
+    `UID:${e.slug}@cleebration-events-hub`, `DTSTAMP:${kalZeit(new Date())}`,
+    `DTSTART:${kalZeit(e.date)}`, `DTEND:${kalZeit(kalEnde(e))}`, `SUMMARY:${t(e.title)}`,
+    kalOrt(e) ? `LOCATION:${t(kalOrt(e))}` : "", `DESCRIPTION:${t(kalText(e, seite, 100000))}`,
+    "END:VEVENT", "END:VCALENDAR"].filter(Boolean);
+  return "data:text/calendar;charset=utf-8," + encodeURIComponent(z.join("\r\n"));
+}
+
+function kalenderLinks(e, feedUrl, seite) {
+  const q = encodeURIComponent;
+  const start = new Date(e.date), ende = kalEnde(e);
+  const text = kalText(e, seite);
+  const ms = (basis) => `${basis}/calendar/0/action/compose?path=%2Fcalendar%2Faction%2Fcompose&rru=addevent` +
+    `&subject=${q(e.title)}&startdt=${q(start.toISOString())}&enddt=${q(ende.toISOString())}` +
+    `&body=${q(text)}&location=${q(kalOrt(e))}`;
+  return {
+    google: "https://calendar.google.com/calendar/render?action=TEMPLATE" +
+      `&text=${q(e.title)}&dates=${kalZeit(start)}/${kalZeit(ende)}` +
+      `&details=${q(text)}&location=${q(kalOrt(e))}&ctz=${q(e.timeZone || "Europe/Vienna")}`,
+    ics: e.ics ? absolut(e.ics, feedUrl) : icsNotfall(e, seite),
+    outlook: ms("https://outlook.live.com"),
+    m365: ms("https://outlook.office.com")
+  };
+}
+
+/* Nur fuer kommende Termine, die stattfinden. */
+function kalenderKnopf(e, t, feedUrl, seite) {
+  if (!e.date || e.status === "cancelled") return "";
+  if (new Date(e.date).getTime() < Date.now()) return "";
+  const l = kalenderLinks(e, feedUrl, seite);
+  const ziel = (k) => k === "ics" ? "" : ` target="_blank" rel="noopener"`;
+  return `
+    <details class="kal">
+      <summary>${esc(t.kalender)}</summary>
+      <ul class="kal__menu">
+        ${["google", "ics", "outlook", "m365"].map((k) =>
+          `<li><a href="${esc(l[k])}"${ziel(k)}>${esc(t.kal[k])}</a></li>`).join("")}
+      </ul>
+    </details>`;
+}
+
+/* Abo-Kalender einer Seite. <event-list abo> leitet die Adresse aus dem
+   Feed ab (…/feed/sites/X.{lang}.json -> …/feed/ics/sites/X.<lang>.ics);
+   abo="https://…" setzt sie ausdruecklich. */
+function aboKnopf(el, t, lang) {
+  if (!el.hasAttribute("abo")) return "";
+  const wert = el.getAttribute("abo");
+  let https = /^https?:/.test(wert || "") ? wert : null;
+  if (!https) {
+    const feed = absolut((el.getAttribute("feed") || "").replace(/\{lang\}/g, lang), location.href);
+    const m = feed.match(/^(.*)\/feed\/sites\/([^/]+?)(?:\.[a-z]{2}(?:-[A-Za-z]+)?)?\.json(?:\?.*)?$/);
+    if (!m) return "";
+    https = `${m[1]}/feed/ics/sites/${m[2]}.${lang}.ics`;
+  }
+  const webcal = https.replace(/^https?:/, "webcal:");
+  const q = encodeURIComponent;
+  const links = {
+    ics: webcal,
+    google: `https://calendar.google.com/calendar/render?cid=${q(webcal)}`,
+    outlook: `https://outlook.live.com/calendar/0/addfromweb?url=${q(https)}`
+  };
+  return `
+    <details class="kal kal--abo">
+      <summary>${esc(t.abo)}</summary>
+      <ul class="kal__menu">
+        ${["google", "ics", "outlook"].map((k) =>
+          `<li><a href="${esc(links[k])}"${k === "ics" ? "" : ` target="_blank" rel="noopener"`}>${esc(t.kal[k])}</a></li>`).join("")}
+      </ul>
+      <p class="kal__hinweis">${esc(t.aboHinweis)}</p>
+    </details>`;
+}
+
 /* ---- <event-list> ------------------------------------------------------- */
 class EventList extends HTMLElement {
-  static get observedAttributes() { return ["feed", "lang", "detail-url", "show"]; }
+  static get observedAttributes() { return ["feed", "lang", "detail-url", "show", "abo"]; }
   connectedCallback() {
     this.attachShadow({ mode: "open" });
     // (4) auf Sprachwechsel reagieren
@@ -194,10 +330,14 @@ class EventList extends HTMLElement {
         .sort((a, b) => new Date(b.date) - new Date(a.date));
     }
 
-    const wrap = this.shadowRoot.querySelector(".wrap");
-    if (!items.length) { wrap.innerHTML = `<p class="empty">${t.none}</p>`; return; }
+    // PATCH lko-site: limit="N" zeigt nur die ersten N (Startseite: 3 zuletzt gespielte).
+    const limit = parseInt(this.getAttribute("limit") || "", 10);
+    if (limit > 0) items = items.slice(0, limit);
 
-    wrap.innerHTML = `<div class="grid">${items.map((e) => card(e, t, detailUrl)).join("")}</div>`;
+    const wrap = this.shadowRoot.querySelector(".wrap");
+    if (!items.length) { wrap.innerHTML = `<p class="empty">${t.none}</p>${aboKnopf(this, t, lang)}`; return; }
+
+    wrap.innerHTML = `<div class="grid">${items.map((e) => card(e, t, detailUrl)).join("")}</div>${aboKnopf(this, t, lang)}`;
   }
 }
 
@@ -283,7 +423,10 @@ class EventDetail extends HTMLElement {
         ${e.translated === false ? `<span class="pill pill--muted">${t.fallbackNote}</span>` : ""}
       </div>
       <div class="detail__body">${e.body || ""}</div>
-      ${e.ticketUrl ? `<a class="btn" href="${e.ticketUrl}" target="_blank" rel="noopener">${t.tickets}</a>` : ""}
+      <div class="aktionen">
+        ${e.ticketUrl ? `<a class="btn" href="${e.ticketUrl}" target="_blank" rel="noopener">${t.tickets}</a>` : ""}
+        ${kalenderKnopf(e, t, feed, absolut(nachbarUrl(e.slug), location.href))}
+      </div>
       ${umblaettern}
     `;
   }
