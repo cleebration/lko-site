@@ -106,7 +106,7 @@ function setzeLocale(o, nach) {
 }
 
 function markiere(o, nach) {
-  if (typeof o === "string") return `[${nach}] ${o}`;
+  if (typeof o === "string") return o.startsWith("__FN__:") ? o.replace(/`([^`$]*)/, "`[" + nach + "] $1") : `[${nach}] ${o}`;
   if (Array.isArray(o)) return o.map((x) => markiere(x, nach));
   if (o && typeof o === "object") return setzeLocale(Object.fromEntries(Object.entries(o).map(([k, v]) => [k, markiere(v, nach)])), nach);
   return o;

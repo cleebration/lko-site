@@ -65,7 +65,7 @@ jobs:
         run: node scripts/sprache.mjs "$SPRACHE"
 
       - name: Übersetzung einchecken
-        if: env.SPRACHE != ''
+        if: always() && env.SPRACHE != ''
         run: |
           git config user.name "Redaktion"
           git config user.email "redaktion@cleebration.com"

@@ -26,6 +26,8 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const VON = "de";
 const NACH = process.argv[2];
 const bericht = [];
+let fehlerAnzahl = 0;
+const fehler = (wo, err) => { fehlerAnzahl++; log(`✗ ${wo}: ${String(err.message || err).slice(0, 200)}`); };
 const log = (s) => { console.log(s); bericht.push(s); };
 
 // ---------- 1. Wörterbuch ----------
@@ -119,7 +121,9 @@ async function seiten() {
     // von hinten einfügen, damit die Positionen davor stimmen
     for (const g of gruppen.reverse()) {
       const innen = html.slice(g.start + g.oeffner.length, g.ende - `</${g.tag}>`.length);
-      const neu = await uebersetzeHtml(innen, VON, NACH, `page ${datei.split("/src/")[1]}`);
+      let neu;
+      try { neu = await uebersetzeHtml(innen, VON, NACH, `page ${datei.split("/src/")[1]}`); }
+      catch (err) { fehler(`Seite ${datei.split("/src/")[1]}`, err); continue; }
       const oeffner = g.oeffner.replace(/data-lang="de"/, `data-lang="${NACH}"`);
       html = html.slice(0, g.letztes) + `\n${g.einzug}${oeffner}${neu}</${g.tag}>` + html.slice(g.letztes);
       n++;
@@ -173,14 +177,43 @@ export async function tabelleErgaenzen(src, name, nach, uebersetze) {
   const de = eintraege.find((e) => e.key === "de");
   if (!de) return null;
   const obj = new Function(`return (${src.slice(de.start, de.ende)});`)();
-  const neu = await uebersetze(obj);
+  // Funktionen (z. B. bildVon: (i, n) => `Bild ${i} von ${n}`) als Quelltext mitschicken –
+  // JSON kennt keine Funktionen. Übersetzt wird nur der Text darin; danach Syntax prüfen.
+  const ersetzt = mitFunktionen(obj, (f) => FN + f.toString());
+  const neu = await uebersetze(ersetzt);
   const schluessel = /^[a-z]{2}$/.test(nach) ? nach : JSON.stringify(nach);
-  const text = `${schluessel}: ${JSON.stringify(neu, null, 2).replace(/\n/g, "\n  ")}`;
+  const text = `${schluessel}: ${jsLiteral(neu, ersetzt, obj, "  ")}`;
   const nachDe = src.slice(de.ende);
   const komma = /^\s*,/.exec(nachDe);
   return komma
     ? src.slice(0, de.ende + komma[0].length) + `\n  ${text},` + nachDe.slice(komma[0].length)
     : src.slice(0, de.ende) + `,\n  ${text}` + nachDe;
+}
+
+const FN = "__FN__:";
+
+/** Funktionen in einem Objekt durch `ersatz(fn)` tauschen (tief). */
+export function mitFunktionen(o, ersatz) {
+  if (typeof o === "function") return ersatz(o);
+  if (Array.isArray(o)) return o.map((x) => mitFunktionen(x, ersatz));
+  if (o && typeof o === "object") return Object.fromEntries(Object.entries(o).map(([k, v]) => [k, mitFunktionen(v, ersatz)]));
+  return o;
+}
+
+/** Als JS-Literal schreiben; "__FN__:"-Werte als Code (übersetzt, wenn gültig, sonst Original). */
+export function jsLiteral(v, vorlage, original, einzug) {
+  const tiefer = einzug + "  ";
+  if (typeof vorlage === "string" && vorlage.startsWith(FN)) {
+    const code = typeof v === "string" ? v.replace(FN, "").trim() : "";
+    try { if (typeof new Function(`return (${code});`)() === "function") return code; } catch {}
+    return original.toString();
+  }
+  if (Array.isArray(v)) return `[${v.map((x, i) => jsLiteral(x, vorlage?.[i], original?.[i], tiefer)).join(", ")}]`;
+  if (v && typeof v === "object") {
+    const z = Object.entries(v).map(([k, x]) => `${tiefer}${/^[A-Za-z_$][\w$]*$/.test(k) ? k : JSON.stringify(k)}: ${jsLiteral(x, vorlage?.[k], original?.[k], tiefer)}`);
+    return `{\n${z.join(",\n")}\n${einzug}}`;
+  }
+  return JSON.stringify(v);
 }
 
 async function module() {
@@ -191,8 +224,11 @@ async function module() {
     let src = await readFile(p, "utf8");
     let geaendert = false;
     for (const tab of ["SPRACHEN", "STRINGS"]) {
-      const next = await tabelleErgaenzen(src, tab, NACH, (o) => uebersetzeObjekt(o, VON, NACH, `UI labels of the ${name} widget`));
-      if (next) { src = next; geaendert = true; }
+      try {
+        const next = await tabelleErgaenzen(src, tab, NACH, (o) => uebersetzeObjekt(o, VON, NACH,
+          `UI labels of the ${name} widget. Values starting with "${FN}" are JavaScript functions: keep the prefix and the code exactly, translate only the human-readable text inside string or template literals`));
+        if (next) { new Function(next.replace(/^\s*(import|export)\b.*$/gm, "")); src = next; geaendert = true; }
+      } catch (err) { fehler(`Modul ${name} (${tab})`, err); }
     }
     if (geaendert) { await writeFile(p, src); log(`Modul: ${name} um ${NACH} ergänzt.`); }
   }
@@ -220,11 +256,12 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     console.error("Aufruf: node scripts/sprache.mjs <sprachcode>   (z. B. fr, it, pt-BR)");
     process.exit(1);
   }
-  await konfiguration();
-  await woerterbuch();
-  await seiten();
-  await module();
+  // Jeder Teil für sich: ein Fehler stoppt die anderen nicht, Fertiges wird trotzdem gespeichert.
+  for (const [name, teil] of [["Konfiguration", konfiguration], ["Wörterbuch", woerterbuch], ["Seiten", seiten], ["Module", module]]) {
+    try { await teil(); } catch (err) { fehler(name, err); }
+  }
   if (process.env.GITHUB_STEP_SUMMARY) {
     await writeFile(process.env.GITHUB_STEP_SUMMARY, `## Sprache ${NACH}\n\n${bericht.map((b) => `- ${b}`).join("\n")}\n`, { flag: "a" });
   }
+  if (fehlerAnzahl) { console.error(`${fehlerAnzahl} Teil(e) mit Fehler – Rest ist übersetzt und wird eingecheckt.`); process.exitCode = 1; }
 }
