@@ -33,7 +33,7 @@ const STRINGS = {
     alleTermine: "Alle Veranstaltungen",
     fallbackNote: "Übersetzung folgt",
     // PATCH Redaktion 2026-10-08: mehrere Termine, Programm, Hinweis, Nachbericht
-    weitereTermine: "Alle Termine", programm: "Programm", mitwirkende: "Mitwirkende", nachbericht: "Nachbericht", fotos: "Fotos ansehen", einlass: "Einlass", verschobenAuf: "neuer Termin", dieserTermin: "dieser Termin",
+    weitereTermine: "Alle Termine", programm: "Programm", mitwirkende: "Mitwirkende", nachbericht: "Nachbericht", fotos: "Fotos ansehen", einlass: "Einlass", verschobenAuf: "neuer Termin", dieserTermin: "dieser Termin", gross: "Doppelklick: Bild groß anzeigen", schliessen: "Schließen",
     // PATCH kalender (ersetzt AddEvent)
     kalender: "In den Kalender",
     abo: "Kalender abonnieren",
@@ -51,7 +51,7 @@ const STRINGS = {
     spaeter: "Later event",
     alleTermine: "All events",
     fallbackNote: "Translation pending",
-    weitereTermine: "All dates", programm: "Programme", mitwirkende: "Performers", nachbericht: "Review", fotos: "View photos", einlass: "Doors", verschobenAuf: "new date", dieserTermin: "this date",
+    weitereTermine: "All dates", programm: "Programme", mitwirkende: "Performers", nachbericht: "Review", fotos: "View photos", einlass: "Doors", verschobenAuf: "new date", dieserTermin: "this date", gross: "Double-click to enlarge", schliessen: "Close",
     // PATCH kalender (replaces AddEvent)
     kalender: "Add to calendar",
     abo: "Subscribe to calendar",
@@ -109,8 +109,13 @@ const STYLES = `
   .pill--muted { background: var(--evt-border); color: var(--evt-text); }
   .empty, .error { color: var(--evt-muted); padding: 2rem 0; }
   /* Detail */
-  .detail__media { aspect-ratio: 16/7; background: var(--evt-border); border-radius: var(--evt-radius); overflow: hidden; margin-bottom: 1.5rem; }
-  .detail__media img { width: 100%; height: 100%; object-fit: cover; }
+  /* PATCH Redaktion 2026-10-08: Bild/Plakat ganz zeigen (nicht beschneiden), Doppelklick = gross */
+  .detail__media { background: var(--evt-border); border-radius: var(--evt-radius); overflow: hidden; margin-bottom: 1.5rem; display: flex; justify-content: center; }
+  .detail__media img { display: block; width: auto; max-width: 100%; height: auto; max-height: 80vh; object-fit: contain; cursor: zoom-in; }
+  .lb { position: fixed; inset: 0; z-index: 2147483000; background: rgba(0,0,0,.92); display: flex; align-items: center; justify-content: center; padding: 2vmin; cursor: zoom-out; }
+  .lb[hidden] { display: none; }
+  .lb img { max-width: 100%; max-height: 100%; object-fit: contain; }
+  .lb button { position: absolute; top: .5rem; right: .9rem; font-size: 2.4rem; line-height: 1; background: none; border: 0; color: #fff; cursor: pointer; }
   .detail__title { font-family: var(--evt-font-display); font-size: clamp(1.8rem, 4vw, 2.6rem); margin: 0 0 .5rem; }
   .detail__facts { display: flex; gap: 1.4rem; flex-wrap: wrap; color: var(--evt-muted); margin-bottom: 1.4rem; }
   .detail__body { max-width: 70ch; }
@@ -429,7 +434,8 @@ class EventDetail extends HTMLElement {
           return `<li class="${x.status === "cancelled" ? "weg" : ""}">${x.slug === e.slug ? `<b>${text}</b> <small>(${esc(L("dieserTermin"))})</small>` : `<a href="${esc(nachbarUrl(x.slug))}">${text}</a>`}</li>`;
         }).join("")}</ul>` : "";
     wrap.innerHTML = `
-      ${e.image ? `<div class="detail__media"><img src="${e.image}" alt=""></div>` : ""}
+      ${e.image ? `<div class="detail__media"><img src="${e.image}" alt="" title="${esc(L("gross"))}"></div>
+      <div class="lb" hidden role="dialog" aria-modal="true"><button type="button" aria-label="${esc(L("schliessen"))}">×</button><img src="${e.image}" alt=""></div>` : ""}
       <h1 class="detail__title">${esc(e.title)}</h1>
       <div class="detail__facts">
         <span>${fmtDate(e.date, e.timeZone, t.locale)}</span>
@@ -452,6 +458,16 @@ class EventDetail extends HTMLElement {
       </div>
       ${umblaettern}
     `;
+    // Grossansicht: Doppelklick (am Handy: Antippen); schliessen mit Klick, × oder Esc
+    const bild = wrap.querySelector(".detail__media img"), lb = wrap.querySelector(".lb");
+    if (bild && lb) {
+      const auf = () => { lb.hidden = false; document.documentElement.style.overflow = "hidden"; lb.querySelector("button").focus(); };
+      const zu = () => { lb.hidden = true; document.documentElement.style.overflow = ""; };
+      bild.addEventListener("dblclick", auf);
+      if (window.matchMedia && matchMedia("(pointer: coarse)").matches) bild.addEventListener("click", auf);
+      lb.addEventListener("click", zu);
+      lb.addEventListener("keydown", (ev) => { if (ev.key === "Escape") zu(); });
+    }
   }
 }
 
