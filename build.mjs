@@ -13,6 +13,7 @@ import { existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import config from "./site.config.mjs";
+import { renderEnsemble } from "./scripts/ensemble.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const SRC = join(HERE, "src");
@@ -128,6 +129,16 @@ function fontLinks() {
   );
 }
 
+/** Personen der Seite /orchester – gepflegt in der Redaktion (Werkzeug „Ensemble“). */
+async function ensembleHtml() {
+  const datei = join(SRC, "data", "ensemble.json");
+  if (!existsSync(datei)) {
+    console.warn("  ! src/data/ensemble.json fehlt — /orchester ohne Personen");
+    return "";
+  }
+  return renderEnsemble(JSON.parse(await read(datei)), config.locales, config.defaultLocale);
+}
+
 const globals = {
   SITE_URL: config.siteUrl,
   MAIL: config.mail,
@@ -139,7 +150,8 @@ const globals = {
   FEED_EVENTS: config.feeds.events,
   IMG_LOGO: image(config.images.logo),
   IMG_LOGO_COLOR: image(config.images.logoColor),
-  IMG_OG: image(config.images.og)
+  IMG_OG: image(config.images.og),
+  ENSEMBLE: await ensembleHtml()
 };
 
 const layout = await read(join(SRC, "layout.html"));

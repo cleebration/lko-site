@@ -53,7 +53,10 @@
     "chair": "(Obmann)",
     "chairDep": "(Obmann-Stellvertreterin)",
     "treasurer": "(Kassier)",
-    "secretary": "(Schriftführer)"
+    "secretary": "(Schriftführer)",
+    "guests": "Zu Gast",
+    "soloists": "Solist*innen",
+    "more": "Mehr erfahren"
   },
   "newsletter": {
     "title": "Anmeldung zum Newsletter"

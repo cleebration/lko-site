@@ -1,0 +1,44 @@
+# Ensemble live schalten
+# ---------------------
+# Die Redaktion (Werkzeuge → Ensemble) schreibt src/data/ensemble.json und Fotos nach
+# public/assets/img/personen/. Jeder Push darauf baut und deployt die Website.
+# Secrets wie bei sprache.yml: CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID.
+
+name: Ensemble
+run-name: "Ensemble live · ${{ github.event.head_commit.message || 'von Hand' }}"
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "src/data/**"
+  # Fotos allein lösen keinen Deploy aus – sie gehen mit der nächsten Änderung der Liste mit.
+  workflow_dispatch:
+
+concurrency:
+  group: sprache   # gleiche Gruppe wie sprache.yml: Live-Deploys laufen nacheinander, nie parallel
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Prüfen
+        run: npm test
+      - name: Live deployen
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          npm run deploy
+          echo "**Ensemble live deployt.**" >> "$GITHUB_STEP_SUMMARY"

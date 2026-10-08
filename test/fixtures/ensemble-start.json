@@ -1,0 +1,226 @@
+{
+  "_hinweis": "Gepflegt in der Redaktion (Werkzeug „Ensemble“). Nie löschen, nur aktiv=false. funktion = Rolle im Verein, position = Rolle im Orchester.",
+  "gruppen": [
+    {
+      "key": "vl1",
+      "name": {
+        "de": "1. Violine",
+        "en": "1st violin"
+      }
+    },
+    {
+      "key": "vl2",
+      "name": {
+        "de": "2. Violine",
+        "en": "2nd violin"
+      }
+    },
+    {
+      "key": "va",
+      "name": {
+        "de": "Viola",
+        "en": "Viola"
+      }
+    },
+    {
+      "key": "vc",
+      "name": {
+        "de": "Violoncello",
+        "en": "Cello"
+      }
+    },
+    {
+      "key": "kb",
+      "name": {
+        "de": "Kontrabass",
+        "en": "Double bass"
+      }
+    }
+  ],
+  "personen": [
+    {
+      "id": "dieter-weiss",
+      "name": "Dieter Weiß",
+      "art": "ensemble",
+      "gruppe": "vl1",
+      "position": {
+        "de": "Konzertmeister",
+        "en": "concertmaster"
+      },
+      "reihenfolge": 10,
+      "aktiv": true
+    },
+    {
+      "id": "josef-hoelzl",
+      "name": "Josef Hölzl",
+      "art": "ensemble",
+      "gruppe": "vl1",
+      "position": {
+        "de": "Konzertmeister Stv.",
+        "en": "deputy concertmaster"
+      },
+      "reihenfolge": 20,
+      "aktiv": true
+    },
+    {
+      "id": "dietmar-fuchsloch",
+      "name": "Dietmar Fuchsloch",
+      "art": "ensemble",
+      "gruppe": "vl1",
+      "reihenfolge": 30,
+      "aktiv": true
+    },
+    {
+      "id": "gerlinde-guertler-laubhold",
+      "name": "Gerlinde Gürtler-Laubhold",
+      "art": "ensemble",
+      "gruppe": "vl1",
+      "reihenfolge": 40,
+      "aktiv": true
+    },
+    {
+      "id": "cornelia-pommer",
+      "name": "Cornelia Pommer",
+      "art": "ensemble",
+      "gruppe": "vl1",
+      "reihenfolge": 50,
+      "aktiv": true
+    },
+    {
+      "id": "michael-schrattbauer",
+      "name": "Michael Schrattbauer",
+      "art": "ensemble",
+      "gruppe": "vl1",
+      "reihenfolge": 60,
+      "aktiv": true
+    },
+    {
+      "id": "alexandra-bruckmueller",
+      "name": "Alexandra Bruckmüller",
+      "art": "ensemble",
+      "gruppe": "vl2",
+      "reihenfolge": 10,
+      "aktiv": true
+    },
+    {
+      "id": "ewald-greslehner",
+      "name": "Ewald Greslehner",
+      "art": "ensemble",
+      "gruppe": "vl2",
+      "reihenfolge": 20,
+      "aktiv": true
+    },
+    {
+      "id": "romana-gschiel-hoetzl",
+      "name": "Romana Gschiel-Hötzl",
+      "art": "ensemble",
+      "gruppe": "vl2",
+      "reihenfolge": 30,
+      "aktiv": true
+    },
+    {
+      "id": "elisabeth-gutternigg",
+      "name": "Elisabeth Gutternigg",
+      "art": "ensemble",
+      "gruppe": "vl2",
+      "funktion": {
+        "de": "Obmann-Stellvertreterin",
+        "en": "deputy chair"
+      },
+      "reihenfolge": 40,
+      "aktiv": true
+    },
+    {
+      "id": "johanna-narowetz",
+      "name": "Johanna Narowetz",
+      "art": "ensemble",
+      "gruppe": "vl2",
+      "reihenfolge": 50,
+      "aktiv": true
+    },
+    {
+      "id": "hans-gutternigg",
+      "name": "Hans Gutternigg",
+      "art": "ensemble",
+      "gruppe": "va",
+      "funktion": {
+        "de": "Kassier",
+        "en": "treasurer"
+      },
+      "reihenfolge": 10,
+      "aktiv": true
+    },
+    {
+      "id": "johanna-hohenwallner",
+      "name": "Johanna Hohenwallner",
+      "art": "ensemble",
+      "gruppe": "va",
+      "reihenfolge": 20,
+      "aktiv": true
+    },
+    {
+      "id": "helene-purtscheller",
+      "name": "Helene Purtscheller",
+      "art": "ensemble",
+      "gruppe": "va",
+      "reihenfolge": 30,
+      "aktiv": true
+    },
+    {
+      "id": "martin-weiss",
+      "name": "Martin Weiss",
+      "art": "ensemble",
+      "gruppe": "va",
+      "reihenfolge": 40,
+      "aktiv": true
+    },
+    {
+      "id": "martin-mairinger",
+      "name": "Martin Mairinger",
+      "art": "ensemble",
+      "gruppe": "vc",
+      "funktion": {
+        "de": "Obmann",
+        "en": "chairman"
+      },
+      "reihenfolge": 10,
+      "aktiv": true
+    },
+    {
+      "id": "stephan-punderlitschek",
+      "name": "Stephan Punderlitschek",
+      "art": "ensemble",
+      "gruppe": "vc",
+      "reihenfolge": 20,
+      "aktiv": true
+    },
+    {
+      "id": "gunther-skala",
+      "name": "Gunther Skala",
+      "art": "ensemble",
+      "gruppe": "vc",
+      "reihenfolge": 30,
+      "aktiv": true
+    },
+    {
+      "id": "lea-voithofer",
+      "name": "Lea Voithofer",
+      "art": "ensemble",
+      "gruppe": "vc",
+      "reihenfolge": 40,
+      "aktiv": true
+    },
+    {
+      "id": "chris-h-leeb",
+      "name": "Chris H. Leeb",
+      "art": "ensemble",
+      "gruppe": "kb",
+      "funktion": {
+        "de": "Schriftführer",
+        "en": "secretary"
+      },
+      "reihenfolge": 10,
+      "aktiv": true
+    }
+  ]
+}

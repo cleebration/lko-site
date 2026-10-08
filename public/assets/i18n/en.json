@@ -53,7 +53,10 @@
     "chair": "(chairman)",
     "chairDep": "(deputy chair)",
     "treasurer": "(treasurer)",
-    "secretary": "(secretary)"
+    "secretary": "(secretary)",
+    "guests": "Guest musicians",
+    "soloists": "Soloists",
+    "more": "Learn more"
   },
   "newsletter": {
     "title": "Sign up for the newsletter"
