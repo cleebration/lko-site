@@ -457,17 +457,19 @@ img { max-width: 100%; height: auto; }
 .site-foot__logo { height: 34px; width: auto; }
 .site-foot__credit { color: #D8CCD0; margin: 1rem 0 .5rem; }
 
-/* Ensemble: Spalten so breit wie ihr Inhalt, jede Person in einer Zeile.
-   Darf rechts über die Textspalte hinausragen (bis 880px, nie über den Bildschirm);
-   passt eine Stimmgruppe nicht mehr daneben, rutscht sie in die nächste Reihe. */
-.ensemble { display: flex; flex-wrap: wrap; gap: 1.25rem 2rem; margin: 1rem 0 3rem;
+/* Ensemble: echtes Raster – Überschriften stehen in allen Reihen genau untereinander.
+   Spalten so breit wie ihr längster Eintrag (auto), damit jede Person in eine Zeile passt;
+   nur wenn der Platz nicht reicht, bricht ein Eintrag um. Darf rechts über die Textspalte
+   hinausragen (bis 880px, nie über den Bildschirm). 3 Spalten ab 1120px, 2 am Tablet, 1 am Handy. */
+.ensemble { display: grid; grid-template-columns: auto; justify-content: start; gap: 1.25rem 2rem; margin: 1rem 0 3rem;
   width: min(880px, calc(50% + 50vw - var(--cl-gutter) - 8px)); max-width: calc(100vw - 2 * var(--cl-gutter)); }
-.ensemble > div { flex: none; max-width: 100%; }
+@media (min-width: 680px)  { .ensemble { grid-template-columns: repeat(2, auto); } }
+@media (min-width: 1120px) { .ensemble { grid-template-columns: repeat(3, auto); } }
+.ensemble > div { min-width: 0; }
 .ensemble h3 { margin: 0 0 .35rem; color: var(--cl-navy); }
 .ensemble ul { list-style: none; padding: 0; margin: 0; }
-.ensemble li { padding: .15rem 0; white-space: nowrap; }
+.ensemble li { padding: .15rem 0; }
 .ensemble .person__rolle { font-size: .85em; }
-@media (max-width: 480px) { .ensemble li { white-space: normal; } }
 .person__foto { width: 2.25rem; height: 2.25rem; border-radius: 50%; object-fit: cover; vertical-align: middle; margin-right: .5rem; }
 .person__rolle, .person__instrument { color: var(--cl-muted); }
 .ensemble li a, .gaeste li a, .solist a { color: var(--cl-navy); }
