@@ -221,6 +221,14 @@
       },
       "reihenfolge": 10,
       "aktiv": true
+    },
+    {
+      "id": "christian-brandner",
+      "name": "Christian Brandner",
+      "art": "ensemble",
+      "gruppe": "va",
+      "reihenfolge": 50,
+      "aktiv": true
     }
   ]
 }
