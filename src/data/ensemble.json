@@ -229,6 +229,14 @@
       "gruppe": "va",
       "reihenfolge": 50,
       "aktiv": true
+    },
+    {
+      "id": "maria-nauen",
+      "name": "Maria Nauen",
+      "art": "ensemble",
+      "gruppe": "va",
+      "reihenfolge": 70,
+      "aktiv": true
     }
   ]
 }
