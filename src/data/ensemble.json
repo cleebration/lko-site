@@ -245,6 +245,14 @@
       "gruppe": "vl1",
       "reihenfolge": 60,
       "aktiv": true
+    },
+    {
+      "id": "ayanna-van-dam",
+      "name": "Ayanna van Dam",
+      "art": "ensemble",
+      "gruppe": "vl2",
+      "reihenfolge": 60,
+      "aktiv": true
     }
   ]
 }
