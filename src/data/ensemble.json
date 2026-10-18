@@ -91,7 +91,7 @@
       "name": "Michael Schrattbauer",
       "art": "ensemble",
       "gruppe": "vl1",
-      "reihenfolge": 70,
+      "reihenfolge": 80,
       "aktiv": false
     },
     {
@@ -243,7 +243,7 @@
       "name": "Ronja Lenczuk",
       "art": "ensemble",
       "gruppe": "vl1",
-      "reihenfolge": 80,
+      "reihenfolge": 70,
       "aktiv": true
     }
   ]
