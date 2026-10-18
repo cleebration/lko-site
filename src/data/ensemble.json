@@ -83,7 +83,7 @@
       "name": "Cornelia Pommer",
       "art": "ensemble",
       "gruppe": "vl1",
-      "reihenfolge": 60,
+      "reihenfolge": 70,
       "aktiv": false
     },
     {
@@ -243,7 +243,7 @@
       "name": "Ronja Lenczuk",
       "art": "ensemble",
       "gruppe": "vl1",
-      "reihenfolge": 70,
+      "reihenfolge": 60,
       "aktiv": true
     }
   ]
