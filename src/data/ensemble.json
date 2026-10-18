@@ -237,6 +237,14 @@
       "gruppe": "va",
       "reihenfolge": 70,
       "aktiv": true
+    },
+    {
+      "id": "ronja-lenczuk",
+      "name": "Ronja Lenczuk",
+      "art": "ensemble",
+      "gruppe": "vl1",
+      "reihenfolge": 80,
+      "aktiv": true
     }
   ]
 }
