@@ -253,6 +253,14 @@
       "gruppe": "vl2",
       "reihenfolge": 60,
       "aktiv": true
+    },
+    {
+      "id": "nora-iser",
+      "name": "Nora Iser",
+      "art": "ensemble",
+      "gruppe": "vc",
+      "reihenfolge": 50,
+      "aktiv": true
     }
   ]
 }
