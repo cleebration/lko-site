@@ -1,4 +1,5 @@
 /**
+ * Stand 2026-11-23 (Claude, Projekt „Music LKO“).
  * Spreadshop des Linzer Kammerorchesters einbetten – erst nach Klick.
  * Anleitung Spreadshop: Shop Settings → Website Integration with JavaScript.
  * Öffnet jemand /shop#!/… (Shop-Unterseite, z. B. aus einem geteilten Link),
