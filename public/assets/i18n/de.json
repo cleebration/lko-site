@@ -6,7 +6,8 @@
     "newsletter": "Newsletter",
     "join": "Mitspielen",
     "imprint": "Impressum",
-    "privacy": "Datenschutz"
+    "privacy": "Datenschutz",
+    "shop": "Shop"
   },
   "a11y": {
     "skip": "Zum Inhalt springen",
@@ -68,5 +69,13 @@
     "imprint": "Impressum",
     "privacy": "Datenschutz",
     "binding": "Maßgeblich ist die deutsche Fassung. Die englische Übersetzung dient nur der Information."
+  },
+  "shop": {
+    "title": "LKO-Shop",
+    "intro": "Unser Merch mit dem Motiv „Ich spiele … im“ und dem LKO-Logo – für jedes Instrument. Jeder Kauf unterstützt den Verein.",
+    "load": "Shop hier anzeigen",
+    "direct": "Shop in neuem Fenster öffnen",
+    "note": "Der Shop wird von Spreadshirt (sprd.net AG) betrieben. Erst mit dem Klick auf „Shop hier anzeigen“ werden Inhalte von Spreadshirt geladen; dabei gelten deren Datenschutzbestimmungen.",
+    "loading": "Shop wird geladen …"
   }
 }

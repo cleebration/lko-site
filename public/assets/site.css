@@ -491,3 +491,10 @@ img { max-width: 100%; height: auto; }
   .intro { padding-block: 3.5rem 3rem; gap: 1rem; }
   .intro__text { padding-top: 0; }
 }
+
+/* ---- Shop (/shop, Spreadshop eingebettet) ------------------------------- */
+.shop-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem 1.5rem; }
+.shop-actions .button { border: 0; cursor: pointer; font: inherit; font-weight: 600; }
+.shop-direct { color: var(--cl-navy); font-weight: 500; }
+.shop-note { font-size: .85rem; color: var(--cl-muted); }
+.shop-embed { margin-block: 1.5rem 3rem; min-height: 50vh; font-family: var(--cl-font-body, inherit); }

@@ -1,0 +1,29 @@
+<!--meta
+{
+  "title": "Shop | Linzer Kammerorchester",
+  "description": "Merch des Linzer Kammerorchesters – Motive „Ich spiele … im“ mit LKO-Logo. Jeder Kauf unterstützt den Verein.",
+  "nav": "shop",
+  "out": "shop.html",
+  "scripts": "<script src=\"/assets/shop-embed.js\" defer></script>"
+}
+-->
+
+<h1 class="page-title" data-i18n="shop.title">LKO-Shop</h1>
+
+<div class="wrap">
+  <!-- Spreadshop „linzer-kammerorchester“ (Auszahlung an den Verein).
+       Zwei-Klick-Lösung: Spreadshirt-Skripte (und deren Cookies) werden erst
+       nach dem Klick geladen – so bleibt „keine Cookies“ in der
+       Datenschutzerklärung für alle anderen Besuche richtig.
+       Shop-Adresse und Einstellungen: public/assets/shop-embed.js -->
+  <section class="prose shop-intro">
+    <p data-i18n="shop.intro">Unser Merch mit dem Motiv „Ich spiele … im“ und dem LKO-Logo – für jedes Instrument. Jeder Kauf unterstützt den Verein.</p>
+    <p class="shop-actions">
+      <button type="button" class="button" id="shop-load" data-i18n="shop.load">Shop hier anzeigen</button>
+      <a class="shop-direct" href="https://linzer-kammerorchester.myspreadshop.at/" target="_blank" rel="noopener" data-i18n="shop.direct">Shop in neuem Fenster öffnen</a>
+    </p>
+    <p class="shop-note" data-i18n="shop.note">Der Shop wird von Spreadshirt (sprd.net AG) betrieben. Erst mit dem Klick auf „Shop hier anzeigen“ werden Inhalte von Spreadshirt geladen; dabei gelten deren Datenschutzbestimmungen.</p>
+  </section>
+
+  <div id="lko-shop" class="shop-embed" hidden></div>
+</div>

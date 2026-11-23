@@ -6,7 +6,8 @@
     "newsletter": "Newsletter",
     "join": "Join us",
     "imprint": "Imprint",
-    "privacy": "Privacy"
+    "privacy": "Privacy",
+    "shop": "Shop"
   },
   "a11y": {
     "skip": "Skip to content",
@@ -68,5 +69,13 @@
     "imprint": "Imprint",
     "privacy": "Privacy",
     "binding": "The German version is the binding one. This English translation is for information only."
+  },
+  "shop": {
+    "title": "LKO shop",
+    "intro": "Our merch with the “Ich spiele … im” (“I play … in”) motif and the LKO logo – for every instrument. Every purchase supports the orchestra.",
+    "load": "Show shop here",
+    "direct": "Open shop in a new window",
+    "note": "The shop is run by Spreadshirt (sprd.net AG). Content from Spreadshirt is only loaded once you click “Show shop here”; their privacy policy applies.",
+    "loading": "Loading shop …"
   }
 }
