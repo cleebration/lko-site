@@ -12,6 +12,12 @@ on:
     branches: [main]
     paths:
       - "src/data/**"
+      # Seiten, Menü und Assets gehen ebenfalls direkt live (seit 2026-11-23, Shop-Seite)
+      - "src/pages/**"
+      - "src/partials/**"
+      - "src/layout.html"
+      - "public/assets/**"
+      - "public/_redirects"
   # Fotos allein lösen keinen Deploy aus – sie gehen mit der nächsten Änderung der Liste mit.
   workflow_dispatch:
 
